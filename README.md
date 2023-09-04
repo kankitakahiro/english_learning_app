@@ -26,21 +26,25 @@ reactディレクトリに移動し、コンテナを起動する。
     npx create-react-app .
     npm install
 
+作業が終了したら通常の実行手順を行いコンテナを起動する。
+
 ### 通常の実行手順
 
 コンテナ起動: 
 
     docker-compose up -d
 
-express
+express:
 
     http://localhost:3000/
 
-react
+react:
 
     http://localhost:8080/
 
-db
+起動に時間がかかる。
+
+db:
 
     次のコマンドでコンテナに入る
 
