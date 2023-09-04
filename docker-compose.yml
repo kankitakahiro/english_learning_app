@@ -4,23 +4,25 @@ services:
     image: mysql
     environment:
       - MYSQL_ROOT_HOST=%
-      - MYSQL_DATABASE=english_learning
-      - MYSQL_USER=talps
-      - MYSQL_PASSWORD=huckutalps
-      - MYSQL_ROOT_PASSWORD=huckutalps
-      - TZ=Asia/Tokyo
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - TZ=${TZ}
     ports:
       - '3306:3306'
     volumes:
-      - ./db/conf:/etc/mysql/conf.d/:ro
-      - mysql_data:/var/lib/mysql
-      - ./db/logs:/var/log/mysql
+      - ./backend/db/conf:/etc/mysql/conf.d/:ro
+      - ./backend/db/mysql_data:/var/lib/mysql
+      - ./backend/db/logs:/var/log/mysql
     networks:
       backend:
         ipv4_address: 172.28.1.5
 
   node:
-    image: node
+    build: 
+      context: .
+      dockerfile: backend/node/Dockerfile
     environment:
       - MYSQL_SERVER=db
       - MYSQL_USER=${DB_USER}
@@ -30,9 +32,9 @@ services:
       - CHOKIDAR_USEPOLLING=true
     tty: true
     ports:
-      - '3000:3000'
+      - '8080:8080'
     volumes:
-      - ./node:/app
+      - ./backend/node:/app
     working_dir: /app
     command: npm run dev
     networks:
@@ -42,20 +44,22 @@ services:
       - db
 
   react:
-    image: node
+    build: 
+      context: .
+      dockerfile: ./Dockerfile
     environment:
       - CHOKIDAR_USEPOLLING=true
     tty: true
     ports:
-      - '8080:8080'
+      - '3000:3000'
     volumes:
-      - ./react:/app
+      - ./frontend/react:/app
     working_dir: /app
     command: bash -c 'npm start && npm run build'
     networks:
       - backend
     depends_on:
-      - api
+      - node
 
 networks:
   backend:
