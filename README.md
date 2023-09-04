@@ -2,7 +2,9 @@
 
 ## 環境構築
 
-参考サイト : https://ramble.impl.co.jp/2588/
+参考サイト : <br>
+https://ramble.impl.co.jp/2588/<br>
+https://qiita.com/shint_1/items/08025e2a688bbbf73612
 
 ### 初回実行時に必要な作業
 
