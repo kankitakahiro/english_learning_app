@@ -8,12 +8,14 @@
 
 nodeディレクトリに移動し、コンテナを起動する。
 
-    docker-compose run --rm --no-deps api /bin/bash
+    docker-compose run --rm --no-deps node /bin/bash
 
 コンテナ内でnpmとnodemonのinstall
 
     npm install
     npm install nodemon
+
+__reactディレクトリとnodeディレクトリにある.gitkeepファイルを削除する。__
 
 reactディレクトリに移動し、コンテナを起動する。
 
@@ -25,6 +27,8 @@ reactディレクトリに移動し、コンテナを起動する。
     npm install -g create-react-app
     npx create-react-app .
     npm install
+
+__.gitignoreファイルは必要ないため削除する__
 
 作業が終了したら通常の実行手順を行いコンテナを起動する。
 
