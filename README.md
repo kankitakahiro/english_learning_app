@@ -6,6 +6,8 @@
 
 ### 初回実行時に必要な作業
 
+branchはsettingをcloneする。
+
 nodeディレクトリに移動し、コンテナを起動する。
 
     docker-compose run --rm --no-deps node /bin/bash
@@ -28,7 +30,7 @@ reactディレクトリに移動し、コンテナを起動する。
     npx create-react-app .
     npm install
 
-__.gitignoreファイルは必要ないため削除する__
+__reactディレクトリ内の.gitignoreファイルは必要ないため削除する__
 
 作業が終了したら通常の実行手順を行いコンテナを起動する。
 
@@ -46,7 +48,7 @@ react:
 
     http://localhost:8080/
 
-起動に時間がかかる。
+reactの起動に時間がかかる。
 
 db:
 
