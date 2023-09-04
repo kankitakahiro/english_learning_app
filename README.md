@@ -2,9 +2,15 @@
 
 ## 環境構築
 
-参考サイト : https://ramble.impl.co.jp/2588/
+参考サイト : <br>
+https://ramble.impl.co.jp/2588/<br>
+https://qiita.com/shint_1/items/08025e2a688bbbf73612
 
 ### 初回実行時に必要な作業
+
+branchはsettingをcloneする。
+
+    git clone -b setting https://github.com/kankitakahiro/english_learning_app.git
 
 nodeディレクトリに移動し、コンテナを起動する。
 
@@ -28,7 +34,7 @@ reactディレクトリに移動し、コンテナを起動する。
     npx create-react-app .
     npm install
 
-__.gitignoreファイルは必要ないため削除する__
+__reactディレクトリ内の.gitignoreファイルは必要ないため削除する__
 
 作業が終了したら通常の実行手順を行いコンテナを起動する。
 
@@ -46,7 +52,7 @@ react:
 
     http://localhost:8080/
 
-起動に時間がかかる。
+reactの起動に時間がかかる。
 
 db:
 
