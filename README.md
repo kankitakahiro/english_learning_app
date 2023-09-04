@@ -10,6 +10,8 @@ https://qiita.com/shint_1/items/08025e2a688bbbf73612
 
 branchはsettingをcloneする。
 
+    git clone -b setting https://github.com/kankitakahiro/english_learning_app.git
+
 nodeディレクトリに移動し、コンテナを起動する。
 
     docker-compose run --rm --no-deps node /bin/bash
