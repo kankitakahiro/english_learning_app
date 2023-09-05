@@ -1,14 +1,18 @@
-FROM node
-# アプリケーションディレクトリを作成する
-WORKDIR /app
-# アプリケーションの依存関係をインストールする
-# ワイルドカードを使用して、package.json と package-lock.json の両方が確実にコピーされるようにします。
-# 可能であれば (npm@5+)
-COPY ./backend/node /app
+FROM node:18.17.1-slim
 
-# 本番用にコードを作成している場合
-# RUN npm install --only=production
-# アプリケーションのソースをバンドルする
-COPY . /usr/src/app
+WORKDIR /app
+
+COPY package*.json ./
+
+
+# RUN npm init -y 
+# RUN npm install express 
+RUN apt-get update && apt-get install -y vim
+RUN npm install
+
+COPY . .
+
 EXPOSE 8080
-CMD [ "node", "server.js" ]
+
+# CMD ["node", "src/server.js"]
+CMD ["npm", "start"]
