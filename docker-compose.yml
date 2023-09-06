@@ -1,28 +1,29 @@
 version: '3'
 
 services:
-  db:
-      image: mysql:8.0
-      environment:
-        - MYSQL_ROOT_HOST=%
-        - MYSQL_DATABASE=${DB_NAME}
-        - MYSQL_USER=${DB_USER}
-        - MYSQL_PASSWORD=${DB_PASS}
-        - MYSQL_ROOT_PASSWORD=${DB_PASS}
-        - TZ=${TZ}
-      networks:
-        - dbNetWork
-      volumes:
-        - ./backend/db/data:/var/lib/mysql
+  # db:
+  #     image: mysql:8.0
+  #     environment:
+  #       - MYSQL_ROOT_HOST=%
+  #       - MYSQL_DATABASE=${DB_NAME}
+  #       - MYSQL_USER=${DB_USER}
+  #       - MYSQL_PASSWORD=${DB_PASS}
+  #       - MYSQL_ROOT_PASSWORD=${DB_PASS}
+  #       - TZ=${TZ}
+  #     networks:
+  #       - dbNetWork
+  #     volumes:
+  #       - ./backend/db/data:/var/lib/mysql
   node:
     build: 
       context: ./backend/node
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     container_name: node
     ports:
       - 8080:8080
-    depends_on:
-      - db
+    # depends_on:
+    #   - db
+    # tty: true
     networks:
       - dbNetWork
     environment:
@@ -32,17 +33,18 @@ services:
       - MYSQL_DATABASE=${DB_NAME}
       - TZ=${TZ}
     volumes:
-      - ./backend/node:/app
+      - ./backend/node/src:/app/src
 
   react:
     build: 
       context: ./frontend/react-app
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     container_name: react
     ports:
       - 3000:3000
     volumes:
-      - ./frontend/react-app:/app
+      - ./frontend/react-app/public:/app/public
+      - ./frontend/react-app/src:/app/src
 networks:
   dbNetWork:
 
