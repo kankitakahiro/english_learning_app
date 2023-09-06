@@ -1,4 +1,3 @@
-node_modules/
-
-.git/
-.gitignore
+**/node_modules
+**/npm-debug.log
+**/Dockerfile
