@@ -10,8 +10,9 @@ services:
   #       - MYSQL_PASSWORD=${DB_PASS}
   #       - MYSQL_ROOT_PASSWORD=${DB_PASS}
   #       - TZ=${TZ}
-  #     networks:
-  #       - dbNetWork
+  #     container_name: db
+  #     # networks:
+  #     #   - dbNetWork
   #     volumes:
   #       - ./backend/db/data:/var/lib/mysql
   node:
@@ -24,8 +25,8 @@ services:
     # depends_on:
     #   - db
     # tty: true
-    networks:
-      - dbNetWork
+    # networks:
+    #   - dbNetWork
     environment:
       - MYSQL_SERVER=db
       - MYSQL_USER=${DB_USER}
@@ -42,10 +43,16 @@ services:
     container_name: react
     ports:
       - 3000:3000
+    depends_on:
+      - node
+    # networks:
+    #   - dbNetWork
     volumes:
       - ./frontend/react-app/public:/app/public
       - ./frontend/react-app/src:/app/src
-networks:
-  dbNetWork:
+      - ./frontend/react-app/package.json:/app/package.json
+      - ./frontend/react-app/package-lock.json:/app/package-lock.json
+# networks:
+#   dbNetWork:
 
     
