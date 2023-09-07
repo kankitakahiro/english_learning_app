@@ -30,10 +30,12 @@ app.get('/lesson-test', (req, res) => {
 
     // *****************
 
+    res.header('Access-Control-Allow-Origin', '*');
+
     // base64形式で返す
     res.json({
         "id": 1,
-        "answer": "apple",
+        "answer": "hogehoge",
         "wronge1": "apple",
         "wronge2": "apple",
         "wronge3": "apple",
