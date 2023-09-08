@@ -80,7 +80,6 @@ function Lesson() {
   );
 }
 
-
 function App() {
   return (
     <Router>
