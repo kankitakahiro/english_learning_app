@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const PORT = 8080;
+const path = require('path');
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 /**
  *  table
@@ -10,7 +13,7 @@ const PORT = 8080;
  */
 
 app.get('/', (req, res) => {
-    res.send('Hello World!');
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // テスト用のエンドポイント
