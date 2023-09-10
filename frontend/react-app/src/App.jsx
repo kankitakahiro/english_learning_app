@@ -11,7 +11,7 @@ export default function App() {
 			<Routes>
 				<Route path="/" element={<Home />} />
 				<Route path="/lesson/:id/:number" element={<Lesson />} />
-				<Route path="/lesson/:id/result" element={<Result />} />
+				<Route path="/lesson/:id/result/:score" element={<Result />} />
 			</Routes>
 		</Router>
 	);

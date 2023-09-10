@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-r
 export default function Result() {
 
     const { id } = useParams();
-    const score = 9;
+    const { score } = useParams();
     return (
         <>
             <header></header>

@@ -81,7 +81,7 @@ ul {
   margin: 62.5px auto;
   width: 250px;
   height: 125px;
-  border: solid;
+  border: 1px solid;
 }
 
 .select-lesson-area, .select-answer-area {
@@ -142,6 +142,11 @@ ul {
   background-color: #FDCD72;
 }
 
+.answer-modal {
+  width: 370px;
+  height: auto;
+}
+
 .your-score-area {
   background-color: #FDCD72;
   width: 70%;
@@ -151,7 +156,7 @@ ul {
   position: relative;
 }
 .your-score-area .score-row-1 {
-  font-size: 3rem;
+  font-size: 2.5rem;
   display: block;
   text-align: center;
 }
