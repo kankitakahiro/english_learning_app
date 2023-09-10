@@ -87,7 +87,7 @@ app.get('/lesson-test', (req, res) => {
                 "wronge1": "apple",
                 "wronge2": "apple",
                 "wronge3": "apple",
-                "image": "data:image/png;base64"+image_data,
+                "image": "data:image/png;base64,"+image_data,
             });
         });
     });
