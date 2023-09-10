@@ -12,17 +12,32 @@ export default function Lesson() {
     const [next, setNext] = useState(2)
     const [score, setScore] = useState(0)
 
+    function createSelects(selects, id, next) {
+        const words = selects.map(word =>
+            <li>
+                <Link to={`/lesson/${id}/${next}`}>
+                    <button onClick={() => handleAnswer(word)}>{word}</button>
+                </Link>
+            </li>
+        );
+        setWords(words);
+    }
+
     useEffect(() => {
         fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=1`)
             .then(response => response.json())
             .then(data => {
-                setAnswer(data.answer)
-                setWords([data.answer, data.wrong1, data.wrong2, data.wrong3])
+                setAnswer(data.answer);
+                const selects = [data.answer, data.wrong1, data.wrong2, data.wrong3];
                 setImage(data.image);
+                createSelects(selects, id, next);
             });
     }, []);
 
     function handleAnswer(word) {
+        console.log(word, answer);
+        console.log(next);
+        console.log(score);
         if (word == answer) {
             console.log("correct");
             setScore(score + 1);
@@ -39,8 +54,10 @@ export default function Lesson() {
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.answer)
-                    setWords([data.answer, data.wrong1, data.wrong2, data.wrong3])
+                    const selects = [data.answer, data.wrong1, data.wrong2, data.wrong3];
                     setImage(data.image);
+                    console.log(next)
+                    createSelects(selects, id, next);
                 });
         }
     };
@@ -49,18 +66,9 @@ export default function Lesson() {
         <>
             <Header />
             <img src={image} /><br />
-            <Link to={`/lesson/${id}/${next}`}>
-                <button onClick={() => handleAnswer(words[0])}>{words[0]}</button>
-            </Link>
-            <Link to={`/lesson/${id}/${next}`}>
-                <button onClick={() => handleAnswer(words[1])}>{words[1]}</button>
-            </Link>
-            <Link to={`/lesson/${id}/${next}`}>
-                <button onClick={() => handleAnswer(words[2])}>{words[2]}</button>
-            </Link>
-            <Link to={`/lesson/${id}/${next}`}>
-                <button onClick={() => handleAnswer(words[3])}>{words[3]}</button>
-            </Link>
+            <div className='select-answer-area'>
+                <ul className='selects'>{words}</ul>
+            </div>
         </>
     );
 }

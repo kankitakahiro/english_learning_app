@@ -1,26 +1,178 @@
+@import url("https://fonts.googleapis.com/css?family=Ubuntu+Mono");
+
 body {
-  width: 390px;
-  height: 844px;
-  margin: auto;
-  border: solid;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: "Ubuntu Mono", monospace;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 390px;
+  height: 844px;
+  margin: 30px auto;
+  border: solid;
+  padding: 10px;
+  position: relative;
+}
+
+Link {
+  color: black;
+}
+
+body {
+  font-family: "Ubuntu Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 390px;
+  height: 844px;
+  margin: 30px auto;
+  border: solid;
+  padding: 10px;
+  position: relative;
+}
+
+Link {
+  color: black;
+}
+
+.footer {
+  position: absolute;
+  bottom: 4rem;
+  width: 100%;
+}
+
+.low-buttons {
+  display: flex;
+  justify-content: space-evenly;
+  margin: auto auto 0 auto;
+}
+
+.btn-p,
+.btn-s {
+  --bs-btn-font-size: 1rem;
+  --bs-btn-line-height: 1.5;
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 1px 1px rgba(0, 0, 0, 0.075);
+  --bs-btn-disabled-opacity: 0.65;
+  --bs-btn-focus-box-shadow: 0 0 0 0.25rem rgba(var(--bs-btn-focus-shadow-rgb), .5);
+  display: inline-block;
+  padding: 0.75rem;
+  font-size: var(--bs-btn-font-size);
+  line-height: var(--bs-btn-line-height);
+  color: black;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+  border: var(--bs-btn-border-width) solid var(--bs-btn-border-color);
+  border-radius: 0.375rem;
+  background-color: #8AB5DE;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.btn-s {
+  background-color: #FDCD72;
+}
+
+body {
+  font-family: "Ubuntu Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 390px;
+  height: 844px;
+  margin: 30px auto;
+  border: solid;
+  padding: 10px;
+  position: relative;
+}
+
+Link {
+  color: black;
 }
 
 .logo-area {
-  width: 284px;
-  height: 110px;
+  margin: 62.5px auto;
+  width: 250px;
+  height: 125px;
+  border: solid;
+}
+
+.select-lesson-area {
+  border-radius: 0.375rem;
+  width: 90%;
+  background-color: #D9D9D9;
+  margin: auto;
 }
 
 .lessons {
-  width: 382px;
-  height: 395px;
-  background-color: #D9D9D9;
+  margin: auto;
+  padding: 1rem;
+  display: block;
+  height: auto;
+  list-style: none;
 }
 
 .lesson {
-  width: 327px;
   height: 70px;
   background-color: #8AB5DE;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 0.375rem;
+  margin: 10px auto;
+  font-size: 2rem;
+}
+
+body {
+  font-family: "Ubuntu Mono", monospace;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 390px;
+  height: 844px;
+  margin: 30px auto;
+  border: solid;
+  padding: 10px;
+  position: relative;
+}
+
+Link {
+  color: black;
+}
+
+.logo-area {
+  margin: 62.5px auto;
+  width: 250px;
+  height: 125px;
+  border: solid;
+}
+
+.select-lesson-area {
+  border-radius: 0.375rem;
+  width: 90%;
+  background-color: #D9D9D9;
+  margin: auto;
+}
+
+.lessons {
+  margin: auto;
+  padding: 1rem;
+  display: block;
+  height: auto;
+  list-style: none;
+}
+
+.lesson {
+  height: 70px;
+  background-color: #8AB5DE;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  border-radius: 0.375rem;
+  margin: 10px auto;
+  font-size: 2rem;
+}
+
+.select-answer-area {
+  background-color: white;
 }

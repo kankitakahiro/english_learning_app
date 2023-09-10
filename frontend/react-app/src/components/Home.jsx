@@ -10,20 +10,24 @@ export default function Home() {
 
     const lessons = lessonList.map(lesson =>
         <li>
-            <Link to={`/lesson/${lesson.id}/1`}>{lesson.title}</Link>
+            <Link to={`/lesson/${lesson.id}/1`} className='lesson'>
+                <span>{lesson.title}</span>
+                <Link to={`/lesson/${lesson.id}/1`} className='btn-s'>PLAY</Link>
+            </Link>
         </li>
+
     );
 
     return (
         <>
-            <div className="home">
-                <div className="logo-area border">
-                    <h1>Vision</h1>
-                </div>
-                <div className="select-lesson-area">
-                    <span>Let's Playing...</span>
-                    <ul className='lessons'>{lessons}</ul>
-                </div>
+            <div className="logo-area">
+                <h1>Vision</h1>
+            </div>
+            <div className="select-lesson-area">
+                <span>Let's Playing...</span>
+                <ul className='lessons'>{lessons}</ul>
+            </div>
+            <div className='footer'>
                 <div className='low-buttons'>
                     <Link to="/setting" className='btn-p'>Settings</Link> <br />
                     <Link to="/guide" className='btn-p'>Guide</Link> <br />

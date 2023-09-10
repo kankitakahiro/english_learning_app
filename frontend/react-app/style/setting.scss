@@ -1,0 +1,24 @@
+$primary: #8AB5DE;
+$secondary: #FDCD72;
+$gray: #D9D9D9;
+
+$display-width: 390px;
+$display-height: 844px;
+
+$radius: 0.375rem;
+
+body {
+    font-family: 'Ubuntu Mono', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: $display-width;
+    height: $display-height;
+    margin: 30px auto;
+    border: solid;
+    padding: 10px;
+    position: relative;
+}
+
+Link {
+    color: black;
+}
