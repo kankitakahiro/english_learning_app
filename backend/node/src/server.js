@@ -36,9 +36,9 @@ app.get('/lesson-test', (req, res) => {
     res.json({
         "id": 1,
         "answer": "hogehoge",
-        "wronge1": "apple",
-        "wronge2": "apple",
-        "wronge3": "apple",
+        "wrong1": "apple",
+        "wrong2": "apple",
+        "wrong3": "apple",
         "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAABp0lEQVR4nO3BMQEAAADCoPVPbQwfoAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
     })
 });

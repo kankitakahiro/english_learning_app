@@ -1,0 +1,37 @@
+$primary: #8AB5DE;
+$secondary: #FDCD72;
+$gray: #D9D9D9;
+
+$display-width: 390px;
+$display-height: 800px;
+$img-width: 256px;
+$img-height: 256px;
+
+$radius: 0.375rem;
+
+body {
+    font-family: 'Ubuntu Mono', monospace;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    width: $display-width;
+    height: $display-height;
+    margin: 30px auto;
+    border: solid;
+    position: relative;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+img {
+    width: $img-width;
+    height: $img-height;
+}
+
+header {
+    border: 1px solid;
+    height: 70px;
+    width: 100%;
+}

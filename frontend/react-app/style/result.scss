@@ -1,0 +1,35 @@
+.your-score-area {
+    background-color: $secondary;
+    width: 70%;
+    height: calc($display-height/4);
+    margin: 4rem auto;
+    padding: 1rem;
+    position: relative;
+
+    .score-row-1 {
+        font-size: 2.5rem;
+        display: block;
+        text-align: center;
+    }
+
+    .score-row-2 {
+        position: absolute;
+        bottom: 2rem;
+        width: 100%;
+
+        div {
+            display: flex;
+            justify-content: space-around;
+            align-items: end;
+            margin: auto auto 0 auto;
+
+            .is {
+                font-size: 1rem;
+            }
+
+            .score {
+                font-size: 6rem;
+            }
+        }
+    }
+}
