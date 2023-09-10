@@ -6,33 +6,36 @@ export default function Home() {
         { title: 'LESOON1', id: 1 },
         { title: 'LESSON2', id: 2 },
         { title: 'LESSON3', id: 3 },
+        { title: 'LESSON4', id: 4 },
+        { title: 'LESSON5', id: 5 },
     ];
 
     const lessons = lessonList.map(lesson =>
-        <li>
+        < li key={lesson.id}>
             <Link to={`/lesson/${lesson.id}/1`} className='lesson'>
                 <span>{lesson.title}</span>
-                <Link to={`/lesson/${lesson.id}/1`} className='btn-s'>PLAY</Link>
+                <button className='btn-s'>PLAY</button>
             </Link>
-        </li>
+        </li >
 
     );
 
     return (
         <>
-            <div className="logo-area">
-                <h1>Vision</h1>
-            </div>
-            <div className="select-lesson-area">
-                <span>Let's Playing...</span>
-                <ul className='lessons'>{lessons}</ul>
-            </div>
-            <div className='footer'>
-                <div className='low-buttons'>
-                    <Link to="/setting" className='btn-p'>Settings</Link> <br />
-                    <Link to="/guide" className='btn-p'>Guide</Link> <br />
+            <main>
+                <div className="logo-area">
                 </div>
-            </div>
+                <div className="select-lesson-area">
+                    <span>Let's Play...</span>
+                    <ul className='lessons'>{lessons}</ul>
+                </div>
+                <div className='footer-d'>
+                    <div className='low-buttons'>
+                        <Link to="/lesson/1/result" className='btn-p'>Settings</Link>
+                        <Link to="/" className='btn-p'>Guide</Link>
+                    </div>
+                </div>
+            </main>
         </>
     );
 }

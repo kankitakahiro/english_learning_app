@@ -1,13 +1,34 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
-import Header from './Header';
 
 export default function Result() {
 
+    const { id } = useParams();
+    const score = 9;
     return (
         <>
-            <Header />
-            <p>お疲れ様でした。</p>
+            <header></header>
+            <main>
+                <div className='lesson-header'>
+                    <h1>LESSON{id}</h1>
+                </div>
+                <div className='your-score-area'>
+                    <span className='score-row-1'>your score</span>
+                    <div className='score-row-2'>
+                        <div>
+                            <span className='is'>is</span>
+                            <span className='score'>{score}/10</span>
+                        </div>
+                    </div>
+
+                </div>
+                <div className='footer-d'>
+                    <div className='low-buttons'>
+                        <Link to="/" className='btn-p'>HOME</Link>
+                        <Link to={`/lesson/${id}/1`} className='btn-p'>Retry</Link>
+                    </div>
+                </div>
+            </main>
         </>
     );
 }

@@ -3,7 +3,9 @@ $secondary: #FDCD72;
 $gray: #D9D9D9;
 
 $display-width: 390px;
-$display-height: 844px;
+$display-height: 800px;
+$img-width: 256px;
+$img-height: 256px;
 
 $radius: 0.375rem;
 
@@ -15,10 +17,21 @@ body {
     height: $display-height;
     margin: 30px auto;
     border: solid;
-    padding: 10px;
     position: relative;
 }
 
-Link {
+a {
     color: black;
+    text-decoration: none;
+}
+
+img {
+    width: $img-width;
+    height: $img-height;
+}
+
+header {
+    border: 1px solid;
+    height: 70px;
+    width: 100%;
 }
