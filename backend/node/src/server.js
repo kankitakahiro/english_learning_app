@@ -24,10 +24,10 @@ app.get('/lesson-test', (req, res) => {
     const lesson = req.query.lesson;
     const number = req.query.number;
 
-    // if (lesson === undefined || number === undefined) {
-    //     res.status(400).send('Bad Request');
-    //     return;
-    // }
+    if (lesson === undefined || number === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
 
     // mysqlからデータを取得する
     // *****************
@@ -91,8 +91,6 @@ app.get('/lesson-test', (req, res) => {
             });
         });
     });
-
-    
 });
 
 app.listen(PORT, () => {
