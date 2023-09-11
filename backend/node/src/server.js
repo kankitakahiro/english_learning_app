@@ -125,14 +125,14 @@ app.get('/mysql', async (req, res) => {
         const pool = await createUnixSocketPool();
         
         // クエリを実行
-        const results = await pool.query('SELECT * FROM question');
+        // const results = await pool.query('SELECT * FROM question');
 
         
         // プールを閉じる
         pool.end();
 
         // クエリの結果をレスポンスとして返す
-        res.json(results);
+        // res.json(results);
     } catch (err) {
         console.error('データベース操作エラー:', err);
         res.status(500).send('データベース操作エラー');
