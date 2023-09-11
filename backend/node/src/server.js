@@ -127,6 +127,9 @@ app.get('/mysql', async (req, res) => {
         
         // クエリを実行
         const results = await pool.query('SELECT * FROM question');
+
+        res.send(results);
+        res.send("動いてる！！！！！")
         
         // プールを閉じる
         pool.end();
@@ -135,6 +138,7 @@ app.get('/mysql', async (req, res) => {
         res.json(results);
     } catch (err) {
         console.error('データベース操作エラー:', err);
+        res.send('データベース操作エラー:',err);
         res.status(500).send('データベース操作エラー');
     }
 });
