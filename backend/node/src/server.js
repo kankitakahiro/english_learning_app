@@ -120,7 +120,6 @@ const createUnixSocketPool = async () => {
 
 // ルートハンドラーの定義
 app.get('/mysql', async (req, res) => {
-    res.send('Hello World!');
     try {
         // Cloud SQL データベースに接続
         const pool = await createUnixSocketPool();
@@ -141,6 +140,7 @@ app.get('/mysql', async (req, res) => {
         res.send('データベース操作エラー:',err);
         res.status(500).send('データベース操作エラー');
     }
+    res.send('Hello World!');
 });
 
 app.listen(PORT, () => {
