@@ -32,17 +32,34 @@ app.get('/lesson-test', (req, res) => {
     // mysqlからデータを取得する
     // *****************
 // PostgreSQL connect info
-const mysql = require('mysql');
-const dbConfig = {
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    socketPath: process.env.INSTANCE_UNIX_SOCKET,
-};
+const mysql = require('promise-mysql');
+// const dbConfig = {
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     socketPath: process.env.INSTANCE_UNIX_SOCKET,
+// };
+
+
+
 // ルートハンドラーの定義
 app.get('/mysql', (req, res) => {
     // Cloud SQL データベースに接続
-    const connection = mysql.createConnection(dbConfig);
+    // const connection = mysql.createConnection(dbConfig);
+    const createUnixSocketPool = async config => {
+        // Note: Saving credentials in environment variables is convenient, but not
+        // secure - consider a more secure solution such as
+        // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+        // keep secrets safe.
+        return mysql.createPool({
+            user: process.env.DB_USER, // e.g. 'my-db-user'
+            password: process.env.DB_PASS, // e.g. 'my-db-password'
+            database: process.env.DB_NAME, // e.g. 'my-database'
+            socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+            // Specify additional properties here.
+            ...config,
+        });
+    };
 
     // 接続を開始
     connection.connect((err) => {
