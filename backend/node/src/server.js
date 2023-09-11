@@ -40,7 +40,7 @@ const dbConfig = {
     database: process.env.DB_NAME
 };
 // ルートハンドラーの定義
-app.get('/', (req, res) => {
+app.get('/mysql', (req, res) => {
     // Cloud SQL データベースに接続
     const connection = mysql.createConnection(dbConfig);
 
