@@ -19,9 +19,7 @@ a {
 }
 
 img, .answer-img {
-  width: 256px;
   border-radius: 0.375rem;
-  height: 256px;
 }
 
 header {
@@ -77,9 +75,9 @@ header {
 
 ul {
   display: block;
-  height: auto;
   list-style: none;
   padding: 0;
+  overflow: auto;
 }
 
 .logo-area {
@@ -95,6 +93,10 @@ ul {
   background-color: #D9D9D9;
   margin: auto;
   padding: 1rem;
+}
+
+.lessons {
+  height: auto;
 }
 
 .lesson, .word-area1, .word-area2 {
@@ -200,10 +202,6 @@ ul {
   justify-content: center;
   align-items: center;
   height: 90%;
-}
-
-.login-centered {
-  text-align: center;
 }
 
 .login-form {
