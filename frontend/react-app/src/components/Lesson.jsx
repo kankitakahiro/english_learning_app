@@ -27,12 +27,14 @@ export default function Lesson() {
     };
     useEffect(() => {
         console.log("called");
-        fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=1`)
+        fetch(`/lesson-test?lesson=${id}&number=1`)
+        // fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=1`)
             .then(response => response.json())
             .then(data => {
                 setAnswer(data.answer);
                 setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
                 setImage(data.image);
+                console.log(data);
             });
     }, [id]);
 
@@ -52,7 +54,7 @@ export default function Lesson() {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
             // http://localhost:8080/lesson-test?lesson=1&number=1
-            fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=${next}`)
+            fetch(`/lesson-test?lesson=${id}&number=${next}`)
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.answer)
