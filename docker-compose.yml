@@ -1,20 +1,6 @@
 version: '3'
 
 services:
-  # db:
-  #     image: mysql:8.0
-  #     environment:
-  #       - MYSQL_ROOT_HOST=%
-  #       - MYSQL_DATABASE=${DB_NAME}
-  #       - MYSQL_USER=${DB_USER}
-  #       - MYSQL_PASSWORD=${DB_PASS}
-  #       - MYSQL_ROOT_PASSWORD=${DB_PASS}
-  #       - TZ=${TZ}
-  #     container_name: db
-  #     # networks:
-  #     #   - dbNetWork
-  #     volumes:
-  #       - ./backend/db/data:/var/lib/mysql
   node:
     build: 
       context: ./backend/node
@@ -22,17 +8,11 @@ services:
     container_name: node
     ports:
       - 8080:8080
-    # depends_on:
-    #   - db
+    depends_on:
+      - vision-db
     # tty: true
     # networks:
     #   - dbNetWork
-    environment:
-      - MYSQL_SERVER=db
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
-      - TZ=${TZ}
     volumes:
       - ./backend/node/src:/app/src
 
