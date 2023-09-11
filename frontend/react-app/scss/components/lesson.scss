@@ -42,3 +42,21 @@
     @extend .word-area1;
     background-color: $secondary;
 }
+
+#correctModal {
+    border: 1rem solid rgb(197, 239, 155);
+
+    h2 {
+        color: chartreuse;
+        text-align: center;
+    }
+}
+
+#wrongModal {
+    border: 1rem solid rgb(245, 141, 139);
+
+    h2 {
+        color: rgb(216, 32, 28);
+        text-align: center;
+    }
+}

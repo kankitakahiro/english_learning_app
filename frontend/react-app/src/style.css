@@ -9,6 +9,9 @@ body {
   border: solid;
   position: relative;
 }
+body #root {
+  height: 100%;
+}
 
 a {
   color: black;
@@ -17,12 +20,13 @@ a {
 
 img, .answer-img {
   width: 256px;
+  border-radius: 0.375rem;
   height: 256px;
 }
 
 header {
   border: 1px solid;
-  height: 70px;
+  height: 10%;
   width: 100%;
 }
 
@@ -31,7 +35,8 @@ header {
   bottom: 4rem;
   width: 100%;
 }
-.footer-d .low-buttons, .footer-s .low-buttons {
+
+.low-buttons {
   display: flex;
   justify-content: space-evenly;
   margin: auto auto 0 auto;
@@ -142,9 +147,20 @@ ul {
   background-color: #FDCD72;
 }
 
-.answer-modal {
-  width: 370px;
-  height: auto;
+#correctModal {
+  border: 1rem solid rgb(197, 239, 155);
+}
+#correctModal h2 {
+  color: chartreuse;
+  text-align: center;
+}
+
+#wrongModal {
+  border: 1rem solid rgb(245, 141, 139);
+}
+#wrongModal h2 {
+  color: rgb(216, 32, 28);
+  text-align: center;
 }
 
 .your-score-area {
@@ -153,6 +169,7 @@ ul {
   height: 200px;
   margin: 4rem auto;
   padding: 1rem;
+  border-radius: 0.375rem;
   position: relative;
 }
 .your-score-area .score-row-1 {
@@ -176,4 +193,46 @@ ul {
 }
 .your-score-area .score-row-2 div .score {
   font-size: 6rem;
+}
+
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90%;
+}
+
+.login-centered {
+  text-align: center;
+}
+
+.login-form {
+  display: inline-block;
+  padding: 2rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.form-item {
+  margin: 1rem 0;
+  text-align: left;
+}
+
+.form-c {
+  display: block;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #212529;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #8AB5DE;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }

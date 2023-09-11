@@ -1,6 +1,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 
+/*
+Top Page Component (pass:/) 
+*/
 export default function Home() {
     const lessonList = [
         { title: 'LESOON1', id: 1 },
@@ -10,6 +13,7 @@ export default function Home() {
         { title: 'LESSON5', id: 5 },
     ];
 
+    // Create lesson list in center of display
     const lessons = lessonList.map(lesson =>
         < li key={lesson.id}>
             <Link to={`/lesson/${lesson.id}/1`} className='lesson'>
@@ -17,7 +21,6 @@ export default function Home() {
                 <button className='btn-s'>PLAY</button>
             </Link>
         </li >
-
     );
 
     return (
@@ -31,8 +34,8 @@ export default function Home() {
                 </div>
                 <div className='footer-d'>
                     <div className='low-buttons'>
-                        <Link to="/lesson/1/result" className='btn-p'>Settings</Link>
-                        <Link to="/" className='btn-p'>Guide</Link>
+                        <Link to="/login" className='btn-p'>Login</Link>
+                        <Link to="/history" className='btn-s'>History</Link>
                     </div>
                 </div>
             </main>

@@ -4,6 +4,7 @@
     height: calc($display-height/4);
     margin: 4rem auto;
     padding: 1rem;
+    border-radius: $radius;
     position: relative;
 
     .score-row-1 {

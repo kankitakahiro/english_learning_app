@@ -18,6 +18,10 @@ body {
     margin: 30px auto;
     border: solid;
     position: relative;
+
+    #root {
+        height: 100%;
+    }
 }
 
 a {
@@ -27,11 +31,12 @@ a {
 
 img {
     width: $img-width;
+    border-radius: $radius;
     height: $img-height;
 }
 
 header {
     border: 1px solid;
-    height: 70px;
+    height: 10%;
     width: 100%;
 }

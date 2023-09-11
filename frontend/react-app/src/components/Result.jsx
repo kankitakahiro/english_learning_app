@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 
+
+/*
+Play Result Page Component (pass:/lesson/:lesson_id/:number) 
+*/
 export default function Result() {
 
     const { id } = useParams();

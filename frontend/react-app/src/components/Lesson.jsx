@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } 
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
+/*
+Playing Page Component (pass:/lesson/:lesson_id/:number) 
+*/
 export default function Lesson() {
 
     const { id } = useParams();
@@ -12,7 +15,10 @@ export default function Lesson() {
     const [next, setNext] = useState(2);
     const [score, setScore] = useState(0);
     const navigate = useNavigate();
-    const [showModal, setShowModal] = useState(false);
+
+    // Decide whether or not to show the modal and Difine modal's design 
+    const [showCorrectModal, setShowCorrectModal] = useState(false);
+    const [showWrongModal, setShowWrongModal] = useState(false);
 
     const customStyles = {
         content: {
@@ -22,12 +28,15 @@ export default function Lesson() {
             bottom: 'auto',
             marginRight: '-50%',
             transform: 'translate(-50%, -50%)',
-            border: '1px solid'
+            border: '1rem solid !important'
         },
     };
+
+    // Called only at first
+    // Get words and image from backend;
     useEffect(() => {
-        console.log("called");
-        fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=1`)
+        fetch(`http:/localhost:8080/lesson-test?lesson=${id}&number=1`)
+            // fetch(`/lesson-test?lesson=${id}&number=1`)
             .then(response => response.json())
             .then(data => {
                 setAnswer(data.answer);
@@ -36,18 +45,24 @@ export default function Lesson() {
             });
     }, [id]);
 
+    // Called when User answer question after that Show modal
     function handleAnswer(word) {
         setNext(next + 1);
         if (word === answer) {
-            setShowModal(true);
             setScore(score + 1);
+            setShowCorrectModal(true);
         } else {
-            setShowModal(true);
+            setShowWrongModal(true);
         }
     };
+
+    /*
+    Called when User click modal 
+    ->Get next question's words and image from backend;
+    */
     function handleNext() {
-        setShowModal(false);
-        console.log()
+        setShowCorrectModal(false);
+        setShowWrongModal(false);
         if (next === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
@@ -59,13 +74,6 @@ export default function Lesson() {
                     setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
                     setImage(data.image);
                     navigate(`/lesson/${id}/${next}`);
-                    // const selects = [
-                    //     { word: data.answer, id: 1 },
-                    //     { word: data.wrong1, id: 2 },
-                    //     { word: data.wrong2, id: 3 },
-                    //     { word: data.wrong3, id: 4 },
-                    // ];
-                    // createSelects(selects);
                 });
         }
     };
@@ -94,16 +102,29 @@ export default function Lesson() {
             </main>
 
             <Modal
-                isOpen={showModal}
-                contentLabel="Answer is"
+                id='correctModal'
+                isOpen={showCorrectModal}
+                contentLabel="correctModal"
                 style={customStyles}
 
             >
-                <div onClick={() => handleNext()}>
-                    <h2>Answer is</h2>
+                <div onClick={() => handleNext()} className='correctModal'>
+                    <h2>Correct!</h2>
                     <img className='answer-img' src={image} /><br />
                     <p className='word-area1'>{answer}</p>
-                    <button onClick={() => handleNext()} className='btn-s'>Next</button>
+                </div>
+            </Modal>
+
+            <Modal
+                id='wrongModal'
+                isOpen={showWrongModal}
+                contentLabel="WrongModal"
+                style={customStyles}
+            >
+                <div onClick={() => handleNext()} className='WrongModal'>
+                    <h2>Wrong</h2>
+                    <img className='answer-img' src={image} /><br />
+                    <p className='word-area1'>{answer}</p>
                 </div>
             </Modal>
         </>
