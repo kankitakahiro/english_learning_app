@@ -44,6 +44,7 @@ const mysql = require('promise-mysql');
 
 // ルートハンドラーの定義
 app.get('/mysql', async (req, res) => {
+    res.send('Hello World!');
     try {
         // Cloud SQL データベースに接続
         const pool = await createUnixSocketPool();
