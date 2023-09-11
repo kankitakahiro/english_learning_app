@@ -1,25 +1,6 @@
 version: '3'
 
 services:
-  vision-db:
-    container_name: vision-db
-    image: gcr.io/cloudsql-docker/gce-proxy:1.19.1
-    volumes:
-      - ./config/vision-398320-fe9ad4140da9.json:/config/vision-398320-fe9ad4140da9.json
-    ports:
-      - "3306:3306"
-    # environment:
-    #   - MYSQL_ROOT_HOST=%
-    #   - MYSQL_DATABASE=${DB_NAME}
-    #   - MYSQL_USER=${DB_USER}
-    #   - MYSQL_PASSWORD=${DB_PASS}
-    #   - MYSQL_ROOT_PASSWORD=${DB_PASS}
-    #   - TZ=${TZ}
-    restart: always
-    command:
-      ["/cloud_sql_proxy",
-      "-instances=vision-398320:asia-northeast1:vision-db=tcp:127.0.0.1:3306",
-      "-credential_file=/config/vision-398320-fe9ad4140da9.json"]
   node:
     build: 
       context: ./backend/node

@@ -1,0 +1,35 @@
+$logo-width: 250px;
+
+.logo-area {
+    margin: calc($logo-width / 4) auto;
+    width: $logo-width;
+    height: calc($logo-width / 2);
+    border: 1px solid;
+}
+
+.select-lesson-area {
+    border-radius: $radius;
+    width: 80%;
+    background-color: $gray;
+    margin: auto;
+    padding: 1rem;
+}
+
+// .lessons {
+//     margin: auto;
+//     padding: 1rem;
+//     display: block;
+//     height: auto;
+//     list-style: none;
+// }
+
+.lesson {
+    height: 50px;
+    background-color: $primary;
+    display: flex;
+    align-items: center;
+    border-radius: $radius;
+    margin: 10px auto;
+    font-size: 2rem;
+    justify-content: space-around;
+}
