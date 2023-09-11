@@ -31,56 +31,54 @@ app.get('/lesson-test', (req, res) => {
 
     // mysqlからデータを取得する
     // *****************
+// PostgreSQL connect info
 const mysql = require('promise-mysql');
+// const dbConfig = {
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     socketPath: process.env.INSTANCE_UNIX_SOCKET,
+// };
 
-// createUnixSocketPool initializes a Unix socket connection pool for
-// a Cloud SQL instance of MySQL.
-const createUnixSocketPool = async config => {
-    // Note: Saving credentials in environment variables is convenient, but not
-    // secure - consider a more secure solution such as
-    // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
-    // keep secrets safe.
+
+
+// ルートハンドラーの定義
+app.get('/mysql', async (req, res) => {
     try {
-    const pool = mysql.createPool({
-        user: process.env.DB_USER, // e.g. 'my-db-user'
-        password: process.env.DB_PASS, // e.g. 'my-db-password'
-        database: process.env.DB_NAME, // e.g. 'my-database'
-        socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
-        // Specify additional properties here.
-        ...config,
-    });
+        // Cloud SQL データベースに接続
+        const pool = await createUnixSocketPool();
+        
+        // クエリを実行
+        const results = await pool.query('SELECT * FROM question');
+        
+        // プールを閉じる
+        pool.end();
 
-    return pool;
-    } catch (error) {
-    console.error('Error creating database connection pool:', error);
-    throw error;
+        // クエリの結果をレスポンスとして返す
+        res.json(results);
+    } catch (err) {
+        console.error('データベース操作エラー:', err);
+        res.status(500).send('データベース操作エラー');
+    }
+});
+
+const createUnixSocketPool = async () => {
+    try {
+        // Note: Saving credentials in environment variables is convenient, but not
+        // secure - consider a more secure solution such as
+        // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+        // keep secrets safe.
+        const pool = mysql.createPool({
+            user: process.env.DB_USER, // e.g. 'my-db-user'
+            password: process.env.DB_PASS, // e.g. 'my-db-password'
+            database: process.env.DB_NAME, // e.g. 'my-database'
+            socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+        });
+        return pool;
+    } catch (err) {
+        throw err;
     }
 };
-
-// この非同期関数内で createUnixSocketPool を呼び出すことができます
-async function main() {
-    const dbConfig = {
-    // ここに接続構成を指定します。
-    };
-
-    const pool = await createUnixSocketPool(dbConfig);
-
-    // ここでデータベースクエリを実行できます。
-    try {
-    const connection = await pool.getConnection();
-    const rows = await connection.query('SELECT * FROM your_table_name');
-    console.log(rows);
-    } catch (error) {
-    console.error('データベースクエリエラー:', error);
-    } finally {
-    if (connection) {
-        connection.release(); // 接続を解放します。
-    }
-    }
-}
-    
-    // main 関数を呼び出します
-    main();
 
     // *****************
 
