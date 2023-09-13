@@ -23,7 +23,7 @@ function LoginForm() {
       // トークンをバックエンドに送信
       // http://localhost:8080/verifyToken
       const response = await fetch('/verifyToken', {
-      // const response = await fetch('http://localhost:8080/verifyToken', {
+        // const response = await fetch('http://localhost:8080/verifyToken', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -38,7 +38,6 @@ function LoginForm() {
         console.error("Failed to verify token on the server");
       }
 
-      // ここでtokenをバックエンドに送信して確認できます。
     } catch (error) {
       console.error("Error logging in: ", error);
     }
@@ -62,46 +61,46 @@ function LoginForm() {
 
   return (
     <>
-    <div>
-    <h1>ログイン</h1>
-    
-    <form onSubmit={handleSubmitSingIn}>
-      <input
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        type="email"
-        placeholder="Email"
-      />
-      <input
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        type="password"
-        placeholder="Password"
-      />
-      <button type="submit">Login</button>
-    </form>
+      <div>
+        <h1>ログイン</h1>
 
-    </div>
+        <form onSubmit={handleSubmitSingIn}>
+          <input
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            type="email"
+            placeholder="Email"
+          />
+          <input
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            type="password"
+            placeholder="Password"
+          />
+          <button type="submit">Login</button>
+        </form>
 
-    <div>
-    <h1>新規登録</h1>
-    <form onSubmit={handleSubmit}>
-      <input
-        value={email}
-        onChange={e => setEmail(e.target.value)}
-        type="email"
-        placeholder="Email"
-      />
-      <input
-        value={password}
-        onChange={e => setPassword(e.target.value)}
-        type="password"
-        placeholder="Password"
-      />
-      <button type="submit">登録</button>
-    </form>
-    {message && <p>{message}</p>}
-    </div>
+      </div>
+
+      <div>
+        <h1>新規登録</h1>
+        <form onSubmit={handleSubmit}>
+          <input
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            type="email"
+            placeholder="Email"
+          />
+          <input
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            type="password"
+            placeholder="Password"
+          />
+          <button type="submit">登録</button>
+        </form>
+        {message && <p>{message}</p>}
+      </div>
     </>
   );
 }

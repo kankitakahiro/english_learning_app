@@ -39,7 +39,7 @@ export default function Home() {
                                         <Accordion.Item eventKey="1">
                                             <Accordion.Header>{question.word}</Accordion.Header>
                                             <Accordion.Body>
-                                                <img src={question.image} />
+                                                <img src={question.image} alt={`${lesson.title}-${question.word}`} />
                                             </Accordion.Body>
                                         </Accordion.Item>
                                     </Accordion>

@@ -78,7 +78,7 @@ export default function Tlesson() {
                     <h1>LESSON{id}</h1>
                     <div>{number}/10</div>
                 </div>
-                <img className='answer-img' src={image} /><br />
+                <img className='answer-img' src={image} alt='answer-img' /><br />
                 <div className='select-answer-area'>
                     <span>Choose from below...</span>
                     <ul className='selects'>
@@ -102,7 +102,7 @@ export default function Tlesson() {
             >
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
-                    <img className='answer-img' src={image} /><br />
+                    <img className='answer-img' src={image} alt='answer-img' /><br />
                     <p className='word-area1'>{answer}</p>
                 </div>
             </Modal>
