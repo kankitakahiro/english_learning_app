@@ -34,14 +34,15 @@ services:
     container_name: react
     ports:
       - 3000:3000
-    depends_on:
-      - node
+    # depends_on:
+    #   - node
     # networks:
     #   - dbNetWork
     volumes:
       - ./frontend/react-app/public:/app/public
       - ./frontend/react-app/src:/app/src
       - ./frontend/react-app/package.json:/app/package.json
+      # - ./frontend/react-app/package-lock.json:/app/package-lock.json
     # environment:
     #   - REACT_APP_FIREBASE_API_KEY=${apiKey}
     #   - REACT_APP_FIREBASE_AUTH_DOMAIN=${authDomain}
