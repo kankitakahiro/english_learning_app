@@ -12,25 +12,25 @@ if (process.env.NODE_ENV !== "production") { // production is 本番環境
     console.log("production");
 }
 
-const serviceAccount = {
-    "type": process.env.apiKey,
-    "project_id": process.env.project_id,
-    "private_key_id": process.env.private_key_id,
-    "private_key": process.env.private_key.replace(/\\n/g, '\n'),
-    "client_email": process.env.client_email,
-    "client_id": process.env.client_id,
-    "auth_uri": process.env.auth_uri,
-    "token_uri": process.env.token_uri,
-    "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
-    "client_x509_cert_url": process.env.client_x509_cert_url,
-    "universe_domain": process.env.universe_domain
-}
+// const serviceAccount = {
+//     "type": process.env.apiKey,
+//     "project_id": process.env.project_id,
+//     "private_key_id": process.env.private_key_id,
+//     "private_key": process.env.private_key.replace(/\\n/g, '\n'),
+//     "client_email": process.env.client_email,
+//     "client_id": process.env.client_id,
+//     "auth_uri": process.env.auth_uri,
+//     "token_uri": process.env.token_uri,
+//     "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
+//     "client_x509_cert_url": process.env.client_x509_cert_url,
+//     "universe_domain": process.env.universe_domain
+// }
 
 app.use(express.static(path.join(__dirname, 'build')));
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+// });
 
 app.use(express.json());
 
@@ -174,6 +174,122 @@ const createUnixSocketPool = async () => {
 };
 
 // アプリ開始時に確認する.
+const readline = require('readline');
+
+app.get('/addsql', async (req, res) => {
+    fs.readdir('./text', async (err, files) => {
+        if (err) {
+        console.log(err);
+        res.status(500).send('Internal Server Error 1');
+        return;
+        }
+        
+        // .txt ファイルだけをフィルタリング
+        const textFiles = files.filter(file => path.extname(file) === '.text');
+    
+        for (const elem of textFiles) {
+        let lesson = 'error';
+        if (/.*B1.*/.test(elem)) {
+            lesson = 1;
+        } else if (/.*B2.*/.test(elem)) {
+            lesson = 2;
+        } else if (/.*C1.*/.test(elem)) {
+            lesson = 3;
+        } else if (/.*C2.*/.test(elem)) {
+            lesson = 4;
+        }
+        console.log(lesson);
+        const stream = fs.createReadStream('./text/' + elem, 'utf8');
+        const namelist = {};
+    
+        const rl = readline.createInterface({
+            input: stream,
+            output: process.stdout,
+            terminal: false
+        });
+    
+        rl.on('line', async (data) => {
+            const processedData = data.replace(/\n/g, '').replace(/ /g, '_').replace(/\./g, '').replace(/'/g, '');
+            // ここで非同期処理を行いたい場合、awaitを使用してください。
+            // 例: const result = await someAsyncFunction(processedData);
+            namelist[data] = processedData;
+        });
+    
+        await new Promise((resolve) => {
+            rl.on('close', async () => {
+                    // ファイルの読み込みが完了した後に行う処理をここに記述
+                    // console.log(namelist); // namelistに処理結果が格納されていると仮定しています
+
+                try {
+                    const files = await fs.promises.readdir('./b64_data'); // 非同期でディレクトリを読み込み
+                    // .txt ファイルだけをフィルタリング
+                    const textFiles = files.filter(file => path.extname(file) === '.text');
+                    
+                    // ここで textFiles の処理を続けできます
+                    // 例: textFiles.forEach(...)
+                    // console.log(textFiles)
+                    Object.keys(namelist).forEach(function (word) {
+                        textFiles.forEach(function (value) {
+                            if (!value.indexOf(namelist[word])) {
+                                
+                                // 文章と絵が入っているファイルを結びつけることができた。
+                                fs.readFile(path.join('./b64_data', value), 'utf8', (err, data) => {
+                                    if (err) {
+                                        res.status(500).send('Internal Server Error 2');
+                                        return;
+                                    }
+                                    image_data = data;
+                                    /**
+                                    *  table
+                                    * ___________________________
+                                    * id | word | image | lesson |
+                                    * ---------------------------
+                                    */
+                                    console.log(word,lesson,"data:image/png;base64," + image_data);
+                                    try {
+                                        // Cloud SQL データベースに接続
+                                        const pool = createUnixSocketPool();
+                                
+                                        // クエリを実行
+                                        const results = pool.query(
+                                            'INSERT INTO question(word,image,lesson) VALUES (???)', 
+                                            [word,"data:image/png;base64," + image_data,lesson],
+                                            function(error, response) {
+                                                if(error) throw error;
+                                                    console.log(response);
+                                            }
+                                        )
+                                
+                                
+                                        // プールを閉じる
+                                        pool.end();
+                                
+                                        // クエリの結果をレスポンスとして返す
+                                        res.json(results);
+                                    } catch (err) {
+                                        console.error('データベース操作エラー:', err);
+                                        res.status(500).send('データベース操作エラー');
+                                    }
+
+                                });
+                            }
+                        });
+                    });
+                } catch (err) {
+                    console.error(err);
+                    res.status(500).send('Internal Server Error 2');
+                }
+
+        
+    
+            resolve(); // Promiseを解決して次のファイルの処理を開始
+            });
+        });
+        }
+        
+        console.log('All files processed.');
+    });
+});
 
 // ルートハンドラーの定義
 app.get('/mysql', async (req, res) => {
