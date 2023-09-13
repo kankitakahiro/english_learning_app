@@ -8,8 +8,6 @@ services:
     container_name: node
     ports:
       - 8080:8080
-    depends_on:
-      - vision-db
     # tty: true
     # networks:
     #   - dbNetWork
