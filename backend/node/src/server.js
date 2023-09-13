@@ -173,6 +173,8 @@ const createUnixSocketPool = async () => {
     }
 };
 
+// アプリ開始時に確認する.
+
 // ルートハンドラーの定義
 app.get('/mysql', async (req, res) => {
     try {

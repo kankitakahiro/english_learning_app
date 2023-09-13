@@ -9,10 +9,10 @@ COPY package*.json ./
 RUN apt-get update && apt-get install -y vim
 RUN npm install
 
-
 ENV NODE_ENV=production
 
 COPY . .
+RUN ./cloud-sql-proxy --credentials-file $GOOGLE_APPLICATION_CREDENTIALS vision-398320:asia-northeast1:vision-db &
 
 EXPOSE 8080
 
