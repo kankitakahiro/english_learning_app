@@ -3,11 +3,12 @@
     bottom: 4rem;
     width: 100%;
 
-    .low-buttons {
-        display: flex;
-        justify-content: space-evenly;
-        margin: auto auto 0 auto;
-    }
+}
+
+.low-buttons {
+    display: flex;
+    justify-content: space-evenly;
+    margin: auto auto 0 auto;
 }
 
 .footer-s {
@@ -47,7 +48,7 @@
 
 ul {
     display: block;
-    height: auto;
     list-style: none;
     padding: 0;
+    overflow: auto;
 }

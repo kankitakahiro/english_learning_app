@@ -1,6 +1,10 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 
+
+/*
+Play Result Page Component (pass:/lesson/:lesson_id/:number) 
+*/
 export default function Result() {
 
     const { id } = useParams();
@@ -9,7 +13,7 @@ export default function Result() {
         <>
             <header></header>
             <main>
-                <div className='lesson-header'>
+                <div className='tlesson-header'>
                     <h1>LESSON{id}</h1>
                 </div>
                 <div className='your-score-area'>
@@ -20,7 +24,6 @@ export default function Result() {
                             <span className='score'>{score}/10</span>
                         </div>
                     </div>
-
                 </div>
                 <div className='footer-d'>
                     <div className='low-buttons'>
