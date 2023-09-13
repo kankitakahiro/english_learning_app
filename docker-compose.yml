@@ -1,26 +1,8 @@
 version: '3'
 
 services:
-<<<<<<< HEAD
-  # db:
-  #     image: mysql:8.0
-  #     environment:
-  #       - MYSQL_ROOT_HOST=%
-  #       - MYSQL_DATABASE=${DB_NAME}
-  #       - MYSQL_USER=${DB_USER}
-  #       - MYSQL_PASSWORD=${DB_PASS}
-  #       - MYSQL_ROOT_PASSWORD=${DB_PASS}
-  #       - TZ=${TZ}
-  #     container_name: db
-  #     # networks:
-  #     #   - dbNetWork
-  #     volumes:
-  #       - ./backend/db/data:/var/lib/mysql
-
-=======
->>>>>>> origin/main
   node:
-    build: 
+    build:
       context: ./backend/node
       dockerfile: Dockerfile
     container_name: node
@@ -31,7 +13,6 @@ services:
     # tty: true
     # networks:
     #   - dbNetWork
-<<<<<<< HEAD
     # environment:
     #   - type=${node_type}
     #   - project_id=${node_project_id}
@@ -44,14 +25,12 @@ services:
     #   - auth_provider_x509_cert_url=${node_auth_provider_x509_cert_url}
     #   - client_x509_cert_url=${node_client_x509_cert_url}     
     #   - universe_domain=${node_universe_domain}
-=======
->>>>>>> origin/main
     volumes:
       - ./backend/node/src:/app/src
       - ./backend/node/package.json:/app/package.json
 
   react:
-    build: 
+    build:
       context: ./frontend/react-app
       dockerfile: Dockerfile
     container_name: react
@@ -65,7 +44,6 @@ services:
       - ./frontend/react-app/public:/app/public
       - ./frontend/react-app/src:/app/src
       - ./frontend/react-app/package.json:/app/package.json
-      - ./frontend/react-app/package-lock.json:/app/package-lock.json
     # environment:
     #   - REACT_APP_FIREBASE_API_KEY=${apiKey}
     #   - REACT_APP_FIREBASE_AUTH_DOMAIN=${authDomain}
@@ -74,7 +52,7 @@ services:
     #   - REACT_APP_FIREBASE_MESSAGING_SENDER_ID=${messagingSenderId}
     #   - REACT_APP_FIREBASE_APP_ID=${appId}
     #   - REACT_APP_FIREBASE_MEASUREMENT_ID=${measurementId}
-# networks:
-#   dbNetWork:
+    # networks:
+    #   dbNetWork:
 
-    
+
