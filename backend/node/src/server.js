@@ -8,7 +8,7 @@ const dotenv = require('dotenv');
 if (process.env.NODE_ENV !== "production") { // production is 本番環境
     dotenv.config();
     console.log("development");
-} else{
+} else {
     console.log("production");
 }
 
@@ -82,9 +82,7 @@ app.get('/lesson-test', (req, res) => {
         res.status(400).send('Bad Request');
         return;
     }
-<<<<<<< HEAD
 
-=======
     // *****************
 
     // 現在のディレクトリの位置をconsole.logで確認
@@ -99,9 +97,8 @@ app.get('/lesson-test', (req, res) => {
     //     console.log(files);
     //     console.log('-----------');
     // });
-    
-    
->>>>>>> origin/main
+
+
     // const data_path = "/Users/yamamotoyuta/Desktop/Hack U/code/english_learning_app/backend/node/b64_data";
 
     fs.readdir('./b64_data', (err, files) => {
@@ -111,17 +108,17 @@ app.get('/lesson-test', (req, res) => {
             return;
         }
 
-        
+
         let image_data;
         // .txt ファイルだけをフィルタリング
         const textFiles = files.filter(file => path.extname(file) === '.text');
-        
+
         // ランダムな .txt ファイルを選ぶ
         const randomFile = textFiles[Math.floor(Math.random() * textFiles.length)];
-        
+
 
         // ファイルの内容を読み取る
-        
+
         fs.readFile(path.join('./b64_data', randomFile), 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Internal Server Error 2');
@@ -141,14 +138,14 @@ app.get('/lesson-test', (req, res) => {
                 "wronge1": "apple",
                 "wronge2": "apple",
                 "wronge3": "apple",
-                "image": "data:image/png;base64,"+image_data,
+                "image": "data:image/png;base64," + image_data,
             });
         });
     });
 });
 
-    // mysqlからデータを取得する
-    // *****************
+// mysqlからデータを取得する
+// *****************
 // PostgreSQL connect info
 const mysql = require('promise-mysql');
 // const dbConfig = {
@@ -181,11 +178,11 @@ app.get('/mysql', async (req, res) => {
     try {
         // Cloud SQL データベースに接続
         const pool = await createUnixSocketPool();
-        
+
         // クエリを実行
         const results = await pool.query('SELECT * FROM question');
 
-        
+
         // プールを閉じる
         pool.end();
 
