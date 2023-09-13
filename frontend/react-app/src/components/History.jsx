@@ -53,6 +53,7 @@ export default function Home() {
     );
     return (
         <>
+            <header></header>
             <ul>{lessons}</ul>
         </>
     );
