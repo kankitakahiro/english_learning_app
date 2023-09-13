@@ -2,10 +2,22 @@ FROM node:18.17.1-slim
 
 WORKDIR /app
 
+# 必要なファイルをコピー
 COPY package*.json ./
+# COPY .env ./
+# COPY react-env.sh ./
 
+# RUN chmod +x ./react-env.sh
+# ENTRYPOINT ["/bin/bash", "-c", "./react-env.sh"]
+
+# シェルスクリプトを実行
+# RUN chmod +x ./react-env.sh && ./react-env.sh
+
+# その他のステップ
 RUN apt-get update && apt-get install -y vim
 RUN npm install
+
+# ENV TEST "test"
 
 COPY . .
 

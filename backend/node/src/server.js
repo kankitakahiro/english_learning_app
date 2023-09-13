@@ -3,8 +3,62 @@ const app = express();
 const PORT = 8080;
 const path = require('path');
 const fs = require('fs');
+const admin = require('firebase-admin');
+const dotenv = require('dotenv');
+if (process.env.NODE_ENV !== "production") { // production is 本番環境
+    dotenv.config();
+    console.log("development");
+} else{
+    console.log("production");
+}
+
+const serviceAccount = {
+    "type": process.env.apiKey,
+    "project_id": process.env.project_id,
+    "private_key_id": process.env.private_key_id,
+    "private_key": process.env.private_key,
+    "client_email": process.env.client_email,
+    "client_id": process.env.client_id,
+    "auth_uri": process.env.auth_uri,
+    "token_uri": process.env.token_uri,
+    "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
+    "client_x509_cert_url": process.env.client_x509_cert_url,
+    "universe_domain": process.env.universe_domain
+}
 
 app.use(express.static(path.join(__dirname, 'build')));
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+});
+
+app.use(express.json());
+
+app.get('/test', (req, res) => {
+    res.send('Hello World!');
+});
+
+// function mySql
+
+
+app.post('/verifyToken', async (req, res) => {
+    const idToken = req.body.token;
+    // console.log(idToken);
+    try {
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        // decodedTokenにはUIDとその他のクレームが含まれます。
+        console.log(decodedToken.uid); // これがユーザーのUIDです。
+        res.header('Access-Control-Allow-Origin', '*');
+        res.json(decodedToken);
+        console.log("ok");
+
+        // Mysqlの処理を書く
+
+    } catch (error) {
+        res.status(401).send('Token is not valid');
+    }
+});
+
 
 /**
  *  table
@@ -29,25 +83,6 @@ app.get('/lesson-test', (req, res) => {
         return;
     }
 
-    // mysqlからデータを取得する
-    // *****************
-
-    // *****************
-
-    // 現在のディレクトリの位置をconsole.logで確認
-    // console.log(__dirname);
-    // fs.readdir('./', (err, files) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error 10');
-    //         return;
-    //     }
-    //     console.log('-----------');
-    //     console.log(files);
-    //     console.log('-----------');
-    // });
-    
-    
     // const data_path = "/Users/yamamotoyuta/Desktop/Hack U/code/english_learning_app/backend/node/b64_data";
 
     fs.readdir('./b64_data', (err, files) => {
