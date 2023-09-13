@@ -36,11 +36,42 @@ export default function Tlesson() {
     // Get words and image from backend;
     useEffect(() => {
         console.log("called");
+<<<<<<< HEAD:frontend/react-app/src/components/Tlesson.jsx
         if (number === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
             fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
+=======
+        fetch(`/lesson-test?lesson=${id}&number=1`)
+        // fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=1`)
+            .then(response => response.json())
+            .then(data => {
+                setAnswer(data.answer);
+                setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
+                setImage(data.image);
+                console.log(data);
+            });
+    }, [id]);
+
+    function handleAnswer(word) {
+        setNext(next + 1);
+        if (word === answer) {
+            setShowModal(true);
+            setScore(score + 1);
+        } else {
+            setShowModal(true);
+        }
+    };
+    function handleNext() {
+        setShowModal(false);
+        console.log()
+        if (next === 11) {
+            navigate(`/lesson/${id}/result/${score}`);
+        } else {
+            // http://localhost:8080/lesson-test?lesson=1&number=1
+            fetch(`/lesson-test?lesson=${id}&number=${next}`)
+>>>>>>> origin/main:frontend/react-app/src/components/Lesson.jsx
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.answer);

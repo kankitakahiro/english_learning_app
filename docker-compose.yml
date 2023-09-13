@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+<<<<<<< HEAD
   # db:
   #     image: mysql:8.0
   #     environment:
@@ -15,6 +16,9 @@ services:
   #     #   - dbNetWork
   #     volumes:
   #       - ./backend/db/data:/var/lib/mysql
+
+=======
+>>>>>>> origin/main
   node:
     build: 
       context: ./backend/node
@@ -22,19 +26,29 @@ services:
     container_name: node
     ports:
       - 8080:8080
-    # depends_on:
-    #   - db
+    depends_on:
+      - vision-db
     # tty: true
     # networks:
     #   - dbNetWork
-    environment:
-      - MYSQL_SERVER=db
-      - MYSQL_USER=${DB_USER}
-      - MYSQL_PASSWORD=${DB_PASS}
-      - MYSQL_DATABASE=${DB_NAME}
-      - TZ=${TZ}
+<<<<<<< HEAD
+    # environment:
+    #   - type=${node_type}
+    #   - project_id=${node_project_id}
+    #   - private_key_id=${node_private_key_id}
+    #   - private_key=${node_private_key}
+    #   - client_email=${node_client_email}
+    #   - client_id=${node_client_id}
+    #   - auth_uri=${node_auth_uri}
+    #   - token_uri=${node_token_uri}
+    #   - auth_provider_x509_cert_url=${node_auth_provider_x509_cert_url}
+    #   - client_x509_cert_url=${node_client_x509_cert_url}     
+    #   - universe_domain=${node_universe_domain}
+=======
+>>>>>>> origin/main
     volumes:
       - ./backend/node/src:/app/src
+      - ./backend/node/package.json:/app/package.json
 
   react:
     build: 
@@ -52,6 +66,14 @@ services:
       - ./frontend/react-app/src:/app/src
       - ./frontend/react-app/package.json:/app/package.json
       - ./frontend/react-app/package-lock.json:/app/package-lock.json
+    # environment:
+    #   - REACT_APP_FIREBASE_API_KEY=${apiKey}
+    #   - REACT_APP_FIREBASE_AUTH_DOMAIN=${authDomain}
+    #   - REACT_APP_FIREBASE_PROJECT_ID=${projectId}
+    #   - REACT_APP_FIREBASE_STORAGE_BUCKET=${storageBucket}
+    #   - REACT_APP_FIREBASE_MESSAGING_SENDER_ID=${messagingSenderId}
+    #   - REACT_APP_FIREBASE_APP_ID=${appId}
+    #   - REACT_APP_FIREBASE_MEASUREMENT_ID=${measurementId}
 # networks:
 #   dbNetWork:
 
