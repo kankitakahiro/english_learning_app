@@ -1,6 +1,7 @@
 version: '3'
 
 services:
+<<<<<<< HEAD
   # db:
   #     image: mysql:8.0
   #     environment:
@@ -16,6 +17,8 @@ services:
   #     volumes:
   #       - ./backend/db/data:/var/lib/mysql
 
+=======
+>>>>>>> origin/main
   node:
     build: 
       context: ./backend/node
@@ -23,11 +26,12 @@ services:
     container_name: node
     ports:
       - 8080:8080
-    # depends_on:
-    #   - db
+    depends_on:
+      - vision-db
     # tty: true
     # networks:
     #   - dbNetWork
+<<<<<<< HEAD
     # environment:
     #   - type=${node_type}
     #   - project_id=${node_project_id}
@@ -40,6 +44,8 @@ services:
     #   - auth_provider_x509_cert_url=${node_auth_provider_x509_cert_url}
     #   - client_x509_cert_url=${node_client_x509_cert_url}     
     #   - universe_domain=${node_universe_domain}
+=======
+>>>>>>> origin/main
     volumes:
       - ./backend/node/src:/app/src
       - ./backend/node/package.json:/app/package.json

@@ -82,7 +82,26 @@ app.get('/lesson-test', (req, res) => {
         res.status(400).send('Bad Request');
         return;
     }
+<<<<<<< HEAD
 
+=======
+    // *****************
+
+    // 現在のディレクトリの位置をconsole.logで確認
+    // console.log(__dirname);
+    // fs.readdir('./', (err, files) => {
+    //     if (err) {
+    //         console.log(err);
+    //         res.status(500).send('Internal Server Error 10');
+    //         return;
+    //     }
+    //     console.log('-----------');
+    //     console.log(files);
+    //     console.log('-----------');
+    // });
+    
+    
+>>>>>>> origin/main
     // const data_path = "/Users/yamamotoyuta/Desktop/Hack U/code/english_learning_app/backend/node/b64_data";
 
     fs.readdir('./b64_data', (err, files) => {
@@ -126,6 +145,56 @@ app.get('/lesson-test', (req, res) => {
             });
         });
     });
+});
+
+    // mysqlからデータを取得する
+    // *****************
+// PostgreSQL connect info
+const mysql = require('promise-mysql');
+// const dbConfig = {
+//     user: process.env.DB_USER,
+//     password: process.env.DB_PASSWORD,
+//     database: process.env.DB_NAME,
+//     socketPath: process.env.INSTANCE_UNIX_SOCKET,
+// };
+
+const createUnixSocketPool = async () => {
+    try {
+        // Note: Saving credentials in environment variables is convenient, but not
+        // secure - consider a more secure solution such as
+        // Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
+        // keep secrets safe.
+        const pool = mysql.createPool({
+            user: process.env.DB_USER, // e.g. 'my-db-user'
+            password: process.env.DB_PASS, // e.g. 'my-db-password'
+            database: process.env.DB_NAME, // e.g. 'my-database'
+            socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+        });
+        return pool;
+    } catch (err) {
+        throw err;
+    }
+};
+
+// ルートハンドラーの定義
+app.get('/mysql', async (req, res) => {
+    try {
+        // Cloud SQL データベースに接続
+        const pool = await createUnixSocketPool();
+        
+        // クエリを実行
+        const results = await pool.query('SELECT * FROM question');
+
+        
+        // プールを閉じる
+        pool.end();
+
+        // クエリの結果をレスポンスとして返す
+        res.json(results);
+    } catch (err) {
+        console.error('データベース操作エラー:', err);
+        res.status(500).send('データベース操作エラー');
+    }
 });
 
 app.listen(PORT, () => {
