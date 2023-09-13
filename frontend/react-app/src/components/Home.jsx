@@ -47,14 +47,11 @@ export default function Home() {
                 </div>
                 <div className='footer-d'>
                     <div className='low-buttons'>
-<<<<<<< HEAD
                         <Link to="/login" className='btn-p'>Login</Link>
                         <Link to="/history" className='btn-s'>History</Link>
-=======
-                        <Link to="/lesson/1/result" className='btn-p'>Settings</Link>
+                        {/* <Link to="/lesson/1/result" className='btn-p'>Settings</Link>
                         <Link to="/" className='btn-p'>Guide</Link>
-                        <Link to="/login" className='btn-p'>ログイン</Link>
->>>>>>> origin/main
+                        <Link to="/login" className='btn-p'>ログイン</Link> */}
                     </div>
                 </div>
             </main>
