@@ -14,11 +14,20 @@ export default function Home() {
     ];
 
     // Create lesson list in center of display
-    const lessons = lessonList.map(lesson =>
+    const tlessons = lessonList.map(lesson =>
         < li key={lesson.id}>
-            <Link to={`/lesson/${lesson.id}/1`} className='lesson'>
+            <Link to={`/tlesson/${lesson.id}/1`} className='lesson'>
                 <span>{lesson.title}</span>
                 <button className='btn-s'>PLAY</button>
+            </Link>
+        </li >
+    );
+
+    const ilessons = lessonList.map(lesson =>
+        < li key={lesson.id}>
+            <Link to={`/ilesson/${lesson.id}/1`} className='lesson2'>
+                <span>{lesson.title}</span>
+                <button className='btn-p'>PLAY</button>
             </Link>
         </li >
     );
@@ -29,8 +38,12 @@ export default function Home() {
                 <div className="logo-area">
                 </div>
                 <div className="select-lesson-area">
-                    <span>Let's Play...</span>
-                    <ul className='lessons'>{lessons}</ul>
+                    <span>image - text..</span>
+                    <ul className='lessons'>{tlessons}</ul>
+                </div>
+                <div className="select-lesson-area">
+                    <span>text - image..</span>
+                    <ul className='lessons'>{ilessons}</ul>
                 </div>
                 <div className='footer-d'>
                     <div className='low-buttons'>

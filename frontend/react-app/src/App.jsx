@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
-import Lesson from './components/Lesson';
-import Lesson2 from './components/Lesson2';
+import Ilesson from './components/Ilesson';
+import Tlesson from './components/Tlesson';
 import Result from './components/Result';
 import Login from './components/Login';
 import History from './components/History';
@@ -12,8 +12,8 @@ export default function App() {
 		<Router>
 			<Routes>
 				<Route path="/" element={<Home />} />
-				<Route path="/lesson/:id/:number" element={<Lesson />} />
-				<Route path="/lesson2/:id/:number" element={<Lesson2 />} />
+				<Route path="/tlesson/:id/:number" element={<Tlesson />} />
+				<Route path="/ilesson/:id/:number" element={<Ilesson />} />
 				<Route path="/lesson/:id/result/:score" element={<Result />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/history" element={<History />} />

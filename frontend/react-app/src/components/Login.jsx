@@ -1,14 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { auth } from '../firebase';
+// import { auth } from '../firebase';
 
 
 export default function Login() {
     const handleLogin = (event) => {
-        event.preventDefault();
-        const { email, password } = event.target.elements;
-        auth.createUserWithEmailAndPassword(email.value, password.value);
+        // event.preventDefault();
+        // const { email, password } = event.target.elements;
+        // auth.createUserWithEmailAndPassword(email.value, password.value);
     };
 
     return (

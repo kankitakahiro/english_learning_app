@@ -6,13 +6,13 @@ import Modal from 'react-modal';
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
 */
-export default function Lesson() {
+export default function Tlesson() {
 
     const { id } = useParams();
     const [words, setWords] = useState([]);
     const [answer, setAnswer] = useState('');
     const [image, setImage] = useState('');
-    const [next, setNext] = useState(2);
+    const [number, setNumber] = useState(1);
     const [score, setScore] = useState(0);
     const navigate = useNavigate();
 
@@ -35,19 +35,24 @@ export default function Lesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        fetch(`http:/localhost:8080/lesson-test?lesson=${id}&number=1`)
-            // fetch(`/lesson-test?lesson=${id}&number=1`)
-            .then(response => response.json())
-            .then(data => {
-                setAnswer(data.answer);
-                setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
-                setImage(data.image);
-            });
-    }, [id]);
+        console.log("called");
+        if (number === 11) {
+            navigate(`/lesson/${id}/result/${score}`);
+        } else {
+            fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=${number}`)
+                // fetch(`/lesson-test?lesson=${id}&number=1`)
+                .then(response => response.json())
+                .then(data => {
+                    setAnswer(data.answer);
+                    setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
+                    setImage(data.image);
+                    navigate(`/tlesson/${id}/${number}`);
+                });
+        }
+    }, [number]);
 
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
-        setNext(next + 1);
         if (word === answer) {
             setScore(score + 1);
             setShowCorrectModal(true);
@@ -63,28 +68,16 @@ export default function Lesson() {
     function handleNext() {
         setShowCorrectModal(false);
         setShowWrongModal(false);
-        if (next === 11) {
-            navigate(`/lesson/${id}/result/${score}`);
-        } else {
-            // http://localhost:8080/lesson-test?lesson=1&number=1
-            fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=${next}`)
-                .then(response => response.json())
-                .then(data => {
-                    setAnswer(data.answer)
-                    setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
-                    setImage(data.image);
-                    navigate(`/lesson/${id}/${next}`);
-                });
-        }
+        setNumber(number + 1);
     };
 
     return (
         <>
             <header></header>
             <main>
-                <div className='lesson-header'>
+                <div className='tlesson-header'>
                     <h1>LESSON{id}</h1>
-                    <div>{next - 1}/10</div>
+                    <div>{number}/10</div>
                 </div>
                 <img className='answer-img' src={image} /><br />
                 <div className='select-answer-area'>

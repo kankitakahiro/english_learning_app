@@ -1,7 +1,7 @@
 $logo-width: 250px;
 
 .logo-area {
-    margin: calc($logo-width / 4) auto;
+    margin: calc($logo-width / 6) auto;
     width: $logo-width;
     height: calc($logo-width / 2);
     border: 1px solid;
@@ -11,12 +11,12 @@ $logo-width: 250px;
     border-radius: $radius;
     width: 80%;
     background-color: $gray;
-    margin: auto;
+    margin: 1rem auto;
     padding: 1rem;
 }
 
 .lessons {
-    height: auto;
+    height: 8rem;
 }
 
 .lesson {
@@ -28,4 +28,9 @@ $logo-width: 250px;
     margin: 10px auto;
     font-size: 2rem;
     justify-content: space-around;
+}
+
+.lesson2 {
+    @extend .lesson;
+    background-color: $secondary;
 }

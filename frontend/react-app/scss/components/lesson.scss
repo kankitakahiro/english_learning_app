@@ -1,4 +1,4 @@
-.lesson-header {
+.tlesson-header {
     width: 80%;
     margin: 10px auto;
     display: flex;
@@ -19,10 +19,22 @@
     }
 }
 
+.ilesson-header {
+    @extend .tlesson-header;
+
+    h1 {
+        background-color: $secondary;
+    }
+
+    div {
+        background-color: $primary;
+    }
+}
+
 .answer-img {
     @extend img;
+    width: $img-width;
     display: block;
-    border: 1px solid;
     margin: 10px auto;
     height: 200px;
 }
@@ -41,6 +53,26 @@
 .word-area2 {
     @extend .word-area1;
     background-color: $secondary;
+}
+
+.answer-word-area {
+    @extend .word-area1;
+    margin-bottom: 2rem;
+    margin-top: 4rem;
+}
+
+.answer-img-table {
+    width: 100%;
+    text-align: center;
+
+    td {
+        height: 8rem;
+
+        img {
+            width: 100%;
+            height: 100%;
+        }
+    }
 }
 
 #correctModal {
