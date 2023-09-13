@@ -1,3 +1,5 @@
 **/node_modules
 **/npm-debug.log
 **/Dockerfile
+
+**/hack-u-deploy-firebase-adminsdk-qndfy-c1d0da96c5.json

@@ -33,6 +33,7 @@ export default function Home() {
                     <div className='low-buttons'>
                         <Link to="/lesson/1/result" className='btn-p'>Settings</Link>
                         <Link to="/" className='btn-p'>Guide</Link>
+                        <Link to="/login" className='btn-p'>ログイン</Link>
                     </div>
                 </div>
             </main>
