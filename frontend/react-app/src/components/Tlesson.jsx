@@ -35,10 +35,7 @@ export default function Tlesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-<<<<<<< HEAD
         console.log("called");
-=======
->>>>>>> origin/main
         if (number === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
