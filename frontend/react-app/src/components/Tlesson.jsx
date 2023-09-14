@@ -28,8 +28,8 @@ export default function Tlesson() {
         if (number === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
-            // fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
-            fetch(`/lesson-test?lesson=${id}&number=${number}`)
+            fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
+                // fetch(`/lesson-test?lesson=${id}&number=${number}`)
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.ans);
