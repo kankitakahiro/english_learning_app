@@ -8,7 +8,7 @@ import Login from './components/Login';
 import History from './components/History';
 
 export default function App() {
-	console.log("get node env in app", process.env.REACT_APP_DEV_URL)
+	console.log("get node env in app", process.env.REACT_APP_DEV_URL);
 	return (
 		<Router>
 			<Routes>
