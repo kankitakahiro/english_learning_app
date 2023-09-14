@@ -153,6 +153,7 @@ ul {
 }
 
 .word-area1, .answer-word-area, .word-area2 {
+  font-size: small;
   width: 80%;
   justify-content: center;
 }
