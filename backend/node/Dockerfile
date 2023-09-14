@@ -12,11 +12,11 @@ RUN npm install
 
 # ENV NODE_ENV=production
 
-
 COPY . .
-# RUN ./cloud-sql-proxy --port 3306 vision-398320:asia-northeast1:vision-db 
+
 ENV GOOGLE_APPLICATION_CREDENTIALS=./vision-398320-5a992653e5ca.json
-ENV INSTANCE_HOST='127.0.0.1'
+ENV INSTANCE_HOST='db'
+ENV CONNECTION_LIMIT='10'
 ENV DB_PORT='3306'
 ENV DB_NAME='vision-db'
 ENV DB_USER='talps'
