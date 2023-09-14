@@ -43,7 +43,7 @@ export default function Tlesson() {
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
-                    setAnswer(data.answer);
+                    setAnswer(data.ans);
                     setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
                     setImage(data.image);
                     navigate(`/tlesson/${id}/${number}`);

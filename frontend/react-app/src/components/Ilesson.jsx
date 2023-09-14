@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { customStyles } from './Modal';
 
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
@@ -19,18 +20,6 @@ export default function Ilesson() {
     // Decide whether or not to show the modal and Difine modal's design 
     const [showCorrectModal, setShowCorrectModal] = useState(false);
     const [showWrongModal, setShowWrongModal] = useState(false);
-
-    const customStyles = {
-        content: {
-            top: '40%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            border: '1rem solid !important'
-        },
-    };
 
     // Called only at first
     // Get words and image from backend;
@@ -104,7 +93,6 @@ export default function Ilesson() {
                 isOpen={showCorrectModal}
                 contentLabel="correctModal"
                 style={customStyles}
-
             >
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
