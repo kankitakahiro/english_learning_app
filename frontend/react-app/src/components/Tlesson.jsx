@@ -105,7 +105,7 @@ export default function Tlesson() {
             >
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
-                    <img className='answer-img' src={image} /><br />
+                    <img className='answer-img' src={image} alt='answer-img' /><br />
                     <p className='word-area1'>{answer}</p>
                 </div>
             </Modal>
