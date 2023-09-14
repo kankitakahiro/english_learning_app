@@ -23,7 +23,7 @@ function LoginForm() {
 
       // トークンをバックエンドに送信
       // http://localhost:8080/verifyToken
-      const response = await fetch('/verifyToken', {
+      const response = await fetch(`${process.env.REACT_APP_DEV_URL}/verifyToken`, {
         // const response = await fetch('http://localhost:8080/verifyToken', {
         method: 'POST',
         headers: {

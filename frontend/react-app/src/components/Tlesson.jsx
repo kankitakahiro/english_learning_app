@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
+import { customStyles } from './Modal';
 
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
@@ -20,18 +21,6 @@ export default function Tlesson() {
     const [showCorrectModal, setShowCorrectModal] = useState(false);
     const [showWrongModal, setShowWrongModal] = useState(false);
 
-    const customStyles = {
-        content: {
-            top: '40%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            border: '1rem solid !important'
-        },
-    };
-
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
@@ -39,12 +28,12 @@ export default function Tlesson() {
         if (number === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
-            fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=${number}`)
+            fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.ans);
-                    setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
+                    setWords(data.item_list);
                     setImage(data.image);
                     navigate(`/tlesson/${id}/${number}`);
                 });

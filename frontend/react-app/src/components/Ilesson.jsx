@@ -27,7 +27,7 @@ export default function Ilesson() {
         if (number === 11) {
             navigate(`/ilesson/${id}/result/${score}`);
         } else {
-            fetch(`http:/localhost:8080/lesson-test?lesson=${id}&number=1`)
+            fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
