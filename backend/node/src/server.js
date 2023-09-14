@@ -245,7 +245,7 @@ app.get('/addsql', async (req, res) => {
                                     * id | word | image | lesson |
                                     * ---------------------------
                                     */
-                                    console.log(word,lesson,"data:image/png;base64," + image_data);
+                                    // console.log(word,lesson,"data:image/png;base64," + image_data);
                                     try {
                                         // Cloud SQL データベースに接続
                                         const pool = createUnixSocketPool();
@@ -258,11 +258,10 @@ app.get('/addsql', async (req, res) => {
                                                 if(error) throw error;
                                                     console.log(response);
                                             }
-                                        )
-                                
-                                
+                                        );
                                         // プールを閉じる
                                         pool.end();
+
                                 
                                         // クエリの結果をレスポンスとして返す
                                         res.json(results);
