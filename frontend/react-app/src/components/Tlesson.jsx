@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
-
+import { customStyles } from './Modal';
+import { REACT_APP_DEV_URL } from '..';
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
 */
@@ -20,18 +21,6 @@ export default function Tlesson() {
     const [showCorrectModal, setShowCorrectModal] = useState(false);
     const [showWrongModal, setShowWrongModal] = useState(false);
 
-    const customStyles = {
-        content: {
-            top: '40%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            border: '1rem solid !important'
-        },
-    };
-
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
@@ -39,12 +28,12 @@ export default function Tlesson() {
         if (number === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
-            fetch(`http://localhost:8080/lesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/lesson-test?lesson=${id}&number=1`)
+            fetch(`${REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
+                // fetch(`/lesson-test?lesson=${id}&number=${number}`)
                 .then(response => response.json())
                 .then(data => {
-                    setAnswer(data.answer);
-                    setWords([data.answer, data.wrong1, data.wrong2, data.wrong3]);
+                    setAnswer(data.ans);
+                    setWords(data.item_list);
                     setImage(data.image);
                     navigate(`/tlesson/${id}/${number}`);
                 });
@@ -79,7 +68,7 @@ export default function Tlesson() {
                     <h1>LESSON{id}</h1>
                     <div>{number}/10</div>
                 </div>
-                <img className='answer-img' src={image} /><br />
+                <img className='answer-img' src={image} alt='answer-img' /><br />
                 <div className='select-answer-area'>
                     <span>Choose from below...</span>
                     <ul className='selects'>
@@ -103,7 +92,7 @@ export default function Tlesson() {
             >
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
-                    <img className='answer-img' src={image} /><br />
+                    <img className='answer-img' src={image} alt='answer-img' /><br />
                     <p className='word-area1'>{answer}</p>
                 </div>
             </Modal>
@@ -116,7 +105,7 @@ export default function Tlesson() {
             >
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
-                    <img className='answer-img' src={image} /><br />
+                    <img className='answer-img' src={image} alt='answer-img' /><br />
                     <p className='word-area1'>{answer}</p>
                 </div>
             </Modal>
