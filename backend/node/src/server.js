@@ -252,7 +252,7 @@ app.get('/addsql', async (req, res) => {
                                 
                                         // クエリを実行
                                         const results = pool.query(
-                                            'INSERT INTO question(word,image,lesson) VALUES (???)', 
+                                            'INSERT INTO question(word,image,lesson) VALUES (?,?,?)', 
                                             [word,"data:image/png;base64," + image_data,lesson],
                                             function(error, response) {
                                                 if(error) throw error;
