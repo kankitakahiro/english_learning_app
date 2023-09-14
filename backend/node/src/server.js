@@ -147,7 +147,7 @@ app.get('/lesson-test', (req, res) => {
 // mysqlからデータを取得する
 // *****************
 // PostgreSQL connect info
-const mysql = require('promise-mysql');
+// const mysql = require('promise-mysql');
 // const dbConfig = {
 //     user: process.env.DB_USER,
 //     password: process.env.DB_PASSWORD,
@@ -155,7 +155,7 @@ const mysql = require('promise-mysql');
 //     socketPath: process.env.INSTANCE_UNIX_SOCKET,
 // };
 
-const createUnixSocketPool = async () => {
+const createUnixSocketPool =  () => {
     try {
         // Note: Saving credentials in environment variables is convenient, but not
         // secure - consider a more secure solution such as
@@ -167,6 +167,7 @@ const createUnixSocketPool = async () => {
             database: process.env.DB_NAME, // e.g. 'my-database'
             socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
         });
+        console.log(pool);
         return pool;
     } catch (err) {
         throw err;
@@ -263,8 +264,8 @@ app.get('/addsql', async (req, res) => {
                                         pool.end();
 
                                 
-                                        // クエリの結果をレスポンスとして返す
-                                        res.json(results);
+                                        // // クエリの結果をレスポンスとして返す
+                                        // res.json(results);
                                     } catch (err) {
                                         console.error('データベース操作エラー:', err);
                                         res.status(500).send('データベース操作エラー');
@@ -290,25 +291,92 @@ app.get('/addsql', async (req, res) => {
     });
 });
 
+// (async () => {
+//     const connection = await mysql.createConnection({
+//         user: process.env.DB_USER, // e.g. 'my-db-user'
+//         password: process.env.DB_PASS, // e.g. 'my-db-password'
+//         database: process.env.DB_NAME, // e.g. 'my-database'
+//         socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+//     });
+
+//     const rows = await connection.query(`SELECT * FROM qquestion;`);
+//     console.log(rows);
+//     connection.end();
+// })();
+const mysql = require('mysql');
+
+
+
 // ルートハンドラーの定義
-app.get('/mysql', async (req, res) => {
-    try {
-        // Cloud SQL データベースに接続
-        const pool = await createUnixSocketPool();
+app.get('/mysql',  (req, res) => {
 
-        // クエリを実行
-        const results = await pool.query('SELECT * FROM question');
-
-
-        // プールを閉じる
-        pool.end();
-
-        // クエリの結果をレスポンスとして返す
-        res.json(results);
-    } catch (err) {
-        console.error('データベース操作エラー:', err);
-        res.status(500).send('データベース操作エラー');
+    if (process.env.NODE_ENV !== "production") { // production is 本番環境
+        dotenv.config();
+        const pool = mysql.createPool({
+            connectionLimit: 10,
+            host: 'db', // Cloud SQL Proxy コンテナのサービス名
+            port: 3306, // Cloud SQL Proxy がリッスンしているポート
+            user: process.env.DB_USER,
+            password: process.env.DB_PASS,
+            database: process.env.DB_NAME
+        });
+            // 例: クエリの実行
+        pool.query('SELECT * FROM question', (err, results) => {
+            if (err) throw err;
+            console.log(results);
+        });
+        console.log("development");
+    } else {
+        const pool = mysql.createPool({
+            user: process.env.DB_USER, // e.g. 'my-db-user'
+            password: process.env.DB_PASS, // e.g. 'my-db-password'
+            database: process.env.DB_NAME, // e.g. 'my-database'
+            socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+        });
+        pool.query('SELECT * FROM question', (err, results) => {
+            if (err) throw err;
+            console.log(results);
+        });
+        console.log("development");
+        console.log("production");
     }
+    
+    
+    // try {
+    //     const pool = mysql.createPool({
+    //         user: process.env.DB_USER, // e.g. 'my-db-user'
+    //         password: process.env.DB_PASS, // e.g. 'my-db-password'
+    //         database: process.env.DB_NAME, // e.g. 'my-database'
+    //         socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+    //     });
+
+    //     // // Cloud SQL データベースに接続
+    //     // const pool = await createUnixSocketPool();
+
+    //     pool.getConnection()
+    //         .then(connection => {
+    //             return connection.query('SELECT * FROM question')
+    //             .then(results => {
+    //                 console.log(results);
+    //                 connection.release();  // 接続をプールに戻す
+    //             })
+    //             .catch(error => {
+    //                 console.error('Error executing query:', error);
+    //             });
+    //         })
+    //         .catch(error => {
+    //             console.error('Error getting connection:', error);
+    //         });
+
+    //     // プールを閉じる
+    //     pool.end();
+
+    //     // クエリの結果をレスポンスとして返す
+    //     res.json(results);
+    // } catch (err) {
+    //     console.error('データベース操作エラー:', err);
+    //     res.status(500).send('データベース操作エラー');
+    // }
 });
 
 app.listen(PORT, () => {

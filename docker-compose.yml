@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  db:
+    image: "gcr.io/cloudsql-docker/gce-proxy:1.13"
+    command:
+      ["/cloud_sql_proxy",
+      "-instances=vision-398320:asia-northeast1:vision-db=tcp:0.0.0.0:3306",
+      "-credential_file=./config/vision-398320-5a992653e5ca.json"]
+    volumes:
+      - ./config/vision-398320-5a992653e5ca.json:/config/vision-398320-5a992653e5ca.json
+    ports:
+      - "3306:3306"
   node:
     build:
       context: ./backend/node
@@ -8,6 +18,8 @@ services:
     container_name: node
     ports:
       - 8080:8080
+    depends_on:
+      - db
     # tty: true
     # networks:
     #   - dbNetWork
