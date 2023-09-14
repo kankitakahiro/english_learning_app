@@ -30,7 +30,6 @@ export default function Tlesson() {
         } else {
             // fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
             fetch(`/lesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.ans);
