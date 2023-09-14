@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } 
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { customStyles } from './Modal';
-
+import { REACT_APP_DEV_URL } from '..';
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
 */
@@ -28,7 +28,7 @@ export default function Tlesson() {
         if (number === 11) {
             navigate(`/lesson/${id}/result/${score}`);
         } else {
-            fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
+            fetch(`${REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/lesson-test?lesson=${id}&number=${number}`)
                 .then(response => response.json())
                 .then(data => {
