@@ -12,6 +12,9 @@ if (process.env.NODE_ENV !== "production") { // production is 本番環境
     console.log("production");
 }
 
+app.use(express.static(path.join(__dirname, 'build')));
+app.use(express.json());
+
 const serviceAccount = {
     "type": process.env.apiKey,
     "project_id": process.env.project_id,
@@ -26,21 +29,23 @@ const serviceAccount = {
     "universe_domain": process.env.universe_domain
 }
 
-app.use(express.static(path.join(__dirname, 'build')));
 
+
+// firebaseの初期化
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
-app.use(express.json());
+// home画面
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 
 app.get('/test', (req, res) => {
     res.send('Hello World!');
 });
 
-// function mySql
-
-
+// ユーザーのトークンをfirebaseに送信して検証する
 app.post('/verifyToken', async (req, res) => {
     const idToken = req.body.token;
     // console.log(idToken);
@@ -51,9 +56,7 @@ app.post('/verifyToken', async (req, res) => {
         res.header('Access-Control-Allow-Origin', '*');
         res.json(decodedToken);
         console.log("ok");
-
         // Mysqlの処理を書く
-
     } catch (error) {
         res.status(401).send('Token is not valid');
     }
@@ -67,9 +70,7 @@ app.post('/verifyToken', async (req, res) => {
  * ---------------------------
  */
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+
 
 // テスト用のエンドポイント
 app.get('/lesson-test', (req, res) => {
@@ -83,49 +84,23 @@ app.get('/lesson-test', (req, res) => {
         return;
     }
 
-    // *****************
-
-    // 現在のディレクトリの位置をconsole.logで確認
-    // console.log(__dirname);
-    // fs.readdir('./', (err, files) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error 10');
-    //         return;
-    //     }
-    //     console.log('-----------');
-    //     console.log(files);
-    //     console.log('-----------');
-    // });
-
-
-    // const data_path = "/Users/yamamotoyuta/Desktop/Hack U/code/english_learning_app/backend/node/b64_data";
-
     fs.readdir('./b64_data', (err, files) => {
         if (err) {
             console.log(err);
             res.status(500).send('Internal Server Error 1');
             return;
         }
-
-
-        let image_data;
         // .txt ファイルだけをフィルタリング
         const textFiles = files.filter(file => path.extname(file) === '.text');
-
         // ランダムな .txt ファイルを選ぶ
         const randomFile = textFiles[Math.floor(Math.random() * textFiles.length)];
 
-
         // ファイルの内容を読み取る
-
         fs.readFile(path.join('./b64_data', randomFile), 'utf8', (err, data) => {
             if (err) {
                 res.status(500).send('Internal Server Error 2');
                 return;
             }
-            image_data = data;
-
             // ans = 'apple';
             // item_list = ['apple', 'banana', 'peach', 'grape'] // シャッフル
 
@@ -138,7 +113,7 @@ app.get('/lesson-test', (req, res) => {
                 "wronge1": "apple",
                 "wronge2": "apple",
                 "wronge3": "apple",
-                "image": "data:image/png;base64," + image_data,
+                "image": "data:image/png;base64," + data,
             });
         });
     });

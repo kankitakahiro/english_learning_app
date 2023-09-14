@@ -35,7 +35,7 @@ export default function Ilesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        fetch(`http:/localhost:8080/lesson-test?lesson=${id}&number=1`)
+        fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=1`)
             // fetch(`/lesson-test?lesson=${id}&number=1`)
             .then(response => response.json())
             .then(data => {

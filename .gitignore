@@ -5,3 +5,6 @@ node_modules
 db/
 
 hack-u-deploy-firebase-adminsdk-qndfy-c1d0da96c5.json
+
+openai
+generate_image
