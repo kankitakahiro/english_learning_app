@@ -6,7 +6,7 @@ import { auth } from './firebaseConfig';
 import Modal from 'react-modal';
 import { customStyles } from './Modal';
 
-function LoginForm() {
+export default function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
@@ -127,4 +127,3 @@ function LoginForm() {
   );
 }
 
-export { LoginForm };

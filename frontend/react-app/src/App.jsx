@@ -4,7 +4,7 @@ import Home from './components/Home';
 import Ilesson from './components/Ilesson';
 import Tlesson from './components/Tlesson';
 import Result from './components/Result';
-import LoginForm from './components/LoginForm';
+import Login from './components/Login';
 import History from './components/History';
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
 				<Route path="/tlesson/:id/:number" element={<Tlesson />} />
 				<Route path="/ilesson/:id/:number" element={<Ilesson />} />
 				<Route path="/lesson/:id/result/:score" element={<Result />} />
-				<Route path="/login" element={<LoginForm />} />
+				<Route path="/login" element={<Login />} />
 				<Route path="/history" element={<History />} />
 			</Routes>
 		</Router>
