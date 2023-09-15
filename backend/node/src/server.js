@@ -262,7 +262,6 @@ app.post('/history', async (req, res) => {
         return;
     }
 
-
     const level = lessonToLevel[lesson][0];
     const type = lessonToLevel[lesson][1];
 
@@ -299,7 +298,6 @@ app.post('/history', async (req, res) => {
             question: []
         };
     }
-
 });
 
 /** min以上max以下の整数値の乱数を返す */
@@ -412,7 +410,7 @@ app.get('/ilesson-test', async (req, res) => {
 
     let wrong1_text_data;
     try {
-        const wrong1_word = result[0][number+2]['word_name'];
+        const wrong1_word = result[0][num+2]['word_name'];
         const wrong1_b64_data_path = path.join('./new_data_set/data/', result[0][number+2]['level'] + '_' + result[0][number+2]['type'], wrong1_word, 'image' + result[0][number+2]['image_id'] + '.text');
     
         wrong1_text_data = await fs.readFile(wrong1_b64_data_path, 'utf8');
@@ -424,7 +422,7 @@ app.get('/ilesson-test', async (req, res) => {
     let wrong2_text_data;
     
     try {
-        const wrong2_word = result[0][number+3]['word_name'];
+        const wrong2_word = result[0][num+3]['word_name'];
         const wrong2_b64_data_path = path.join('./new_data_set/data/', result[0][number+3]['level'] + '_' + result[0][number+3]['type'], wrong2_word, 'image' + result[0][number+3]['image_id'] + '.text');
     
         wrong2_text_data = await fs.readFile(wrong2_b64_data_path, 'utf8');
@@ -436,7 +434,7 @@ app.get('/ilesson-test', async (req, res) => {
     
     let wrong3_text_data;
     try {
-        const wrong3_word = result[0][number+4]['word_name'];
+        const wrong3_word = result[0][num+4]['word_name'];
         const wrong3_b64_data_path = path.join('./new_data_set/data/', result[0][number+4]['level'] + '_' + result[0][number+4]['type'], wrong3_word, 'image' + result[0][number+4]['image_id'] + '.text');
         wrong3_text_data = await fs.readFile(wrong3_b64_data_path, 'utf8');
     } catch (err) {
