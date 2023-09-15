@@ -145,9 +145,90 @@ app.get('/development-mysl/add-data', async (req, res) => {
       
           
       });
+
+
+      app.get('/development-mysl/init-table', async(req, res) => {
+          const table_name = req.query.table_name;
+      
+          if (table_name === undefined) {
+              console.log('Bad Request');
+              res.status(400).send('Bad Request');
+              return;
+          }
+      
+          if (table_name !== 'lesson_data' && table_name !== 'user_data' && table_name !== 'user_lesson') {
+              console.log(table_name);
+              console.log('Bad Request');
+              res.status(400).send('Bad Request');
+              return;
+          }
+      
+          // pool.query('DROP TABLE lesson_data', (err, results) => {
+          //     if (err) throw err;
+          //     console.log(results);
+          // });
+      
+          const checkQuery = `SHOW TABLES LIKE ?`;
+      
+          
+          const data_query = `CREATE TABLE ${table_name} (
+              id INT NOT NULL AUTO_INCREMENT,
+              word_name VARCHAR(255) NOT NULL,
+              level VARCHAR(255) NOT NULL,
+              type VARCHAR(255) NOT NULL,
+              sentence VARCHAR(255) NOT NULL,
+              image_id INT NOT NULL,
+              PRIMARY KEY (id)
+          )`;
+      
+          // id | user_name | user_id |
+          const user_query = `CREATE TABLE ${table_name} (
+              id INT NOT NULL AUTO_INCREMENT,
+              user_name VARCHAR(255) NOT NULL,
+              user_id VARCHAR(255) NOT NULL,
+              PRIMARY KEY (id)
+          )`;
+      
+          // id | word_name | user_id | image_id |
+          const user_lesson_query = `CREATE TABLE ${table_name} (
+              id INT NOT NULL AUTO_INCREMENT,
+              word_name VARCHAR(255) NOT NULL,
+              user_id VARCHAR(255) NOT NULL,
+              image_id INT NOT NULL,
+              PRIMARY KEY (id)
+          )`;
+      
+          let exec_query;
+          if (table_name === 'lesson_data') {
+              exec_query = data_query;
+          } else if (table_name === 'user_data') {
+              exec_query = user_query;
+          } else if (table_name === 'user_lesson') {
+              exec_query = user_lesson_query;
+          }
+      
+          let ans;
+          pool.query(checkQuery, [table_name], (err, results) => {
+              if (err) throw err;
+              
+              ans = results;
+              if (ans.length === 0) {
+                  console.error('テーブルが存在しません。テーブルを作成します。');
+                  // primary key(int) | word_name(str) | level(str) | type(str) | sentence(str) | image_id(int) |
+                  
+                  pool.query(exec_query, (err, results) => {
+                      if (err) throw err;
+                      console.log(results);
+                  });
+              } else {
+                  console.error('テーブルが存在します。');
+                  return;   
+              }
+          });    
+      });
       
 
-      // アプリ開始時に確認する.
+// アプリ開始時に確認する.
 const readline = require('readline');
 const { create } = require('domain');
 const { table } = require('console');
