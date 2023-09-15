@@ -50,7 +50,7 @@ export default function Tlesson() {
         };
         const fetchGet = async () => {
             try {
-                const response = await fetch(`${REACT_APP_DEV_URL}/history`);
+                const response = await fetch(`${REACT_APP_DEV_URL}/tlesson-test?lesson=${id}&number=${number}`);
                 if (!response.ok) {
                     throw new Error('データの取得に失敗しました。');
                 }
