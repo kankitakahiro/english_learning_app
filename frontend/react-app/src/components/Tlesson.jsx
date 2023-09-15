@@ -27,6 +27,22 @@ export default function Tlesson() {
 
     // Called only at first
     // Get words and image from backend;
+    const [imageSrc, setImageSrc] = useState('');
+
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/logo_sample.png');
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
+            } catch (error) {
+                console.error('画像の読み込みエラー:', error);
+            }
+        };
+        loadImage();
+    }, []);
+
     useEffect(() => {
         const fetchPost = async () => {
             try {
@@ -95,7 +111,7 @@ export default function Tlesson() {
 
     return (
         <>
-            <Header />
+            <Header imgUrl={imageSrc} />
             <main>
                 <div className='tlesson-header'>
                     <h1>LESSON{id}</h1>

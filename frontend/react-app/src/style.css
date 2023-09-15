@@ -184,7 +184,7 @@ ul {
 }
 
 #correctModal {
-  border: 1rem solid rgb(197, 239, 155);
+  border: 1rem solid rgb(197, 239, 155) !important;
 }
 #correctModal h2 {
   color: chartreuse;
