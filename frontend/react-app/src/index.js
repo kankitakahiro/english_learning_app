@@ -10,6 +10,7 @@ if (process.env.NODE_ENV !== "production") { // production is 本番環境
 	// dotenv.config();
 	REACT_APP_DEV_URL = "http://localhost:8080";
 	console.log("development");
+	
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

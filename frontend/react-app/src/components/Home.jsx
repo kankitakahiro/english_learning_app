@@ -39,11 +39,11 @@ export default function Home() {
                     <img src="logo_sample.png" alt="logo" />
                 </div>
                 <div className="select-lesson-area">
-                    <span>image -> text..</span>
+                    <span>image to text..</span>
                     <ul className='lessons'>{tlessons}</ul>
                 </div>
                 <div className="select-lesson-area">
-                    <span>text -> image..</span>
+                    <span>text to image..</span>
                     <ul className='lessons'>{ilessons}</ul>
                 </div>
                 <div className='footer-d'>
