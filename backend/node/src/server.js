@@ -95,7 +95,7 @@ app.post('/verifyToken', async (req, res) => {
         // decodedTokenにはUIDとその他のクレームが含まれます。
         console.log(decodedToken.uid, 'is log in'); // これがユーザーのUIDです。
 
-        res.header('Access-Control-Allow-Origin', '*'); // for development
+        // res.header('Access-Control-Allow-Origin', '*'); // for development
 
         res.json(decodedToken);
 
@@ -133,13 +133,15 @@ app.get('/tlesson-test', async (req, res) => {
     const lesson = req.query.lesson;
     const number = parseInt(req.query.number);
 
-    const level = lessonToLevel[lesson][0];
-    const type = lessonToLevel[lesson][1];
+    
 
     if (lesson === undefined || number === undefined) {
         res.status(400).send('Bad Request');
         return;
     }
+
+    const level = lessonToLevel[lesson][0];
+    const type = lessonToLevel[lesson][1];
 
     let whereQeury = "WHERE level = ? AND type = ?";
     if (lesson === "1") {
@@ -169,27 +171,51 @@ app.get('/tlesson-test', async (req, res) => {
     console.log(result);
     console.log(result[0].length);
     
-    const sentence = result[0][number-1]['sentence'];
-    const word = result[0][number-1]['word_name'];
-    const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+    
+    let sentence;
     let text_data;
     try {
+        sentence = result[0][number-1]['sentence'];
+        const word = result[0][number-1]['word_name'];
+        const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+    
         text_data = await fs.readFile(b64_data_path, 'utf8');
     } catch (err) {
+        sentence = "エラー..., Sorry";
+        text_data = ["..."];
         console.error('ファイル読み込みエラー:', err);
-        res.status(500).send('ファイル読み込みエラー');
+        // res.status(500).send('ファイル読み込みエラー');
     }
     
     let num = number;
     if (number > 5) {
         num = 0;
     }
-    const wrong1 = result[0][num]['sentence'];
-    const wrong2 = result[0][num+1]['sentence'];
-    const wrong3 = result[0][num+2]['sentence'];
 
-    const item_list = shuffleArray([sentence, wrong1, wrong2, wrong3]);
-    res.header('Access-Control-Allow-Origin', '*');
+    let wrong1; result[0][num]['sentence'];
+    let wrong2; result[0][num+1]['sentence'];
+    let wrong3; result[0][num+2]['sentence'];
+    try {
+        wrong1 = result[0][num]['sentence'];
+        wrong2 = result[0][num+1]['sentence'];
+        wrong3 = result[0][num+2]['sentence'];
+    } catch (err) {
+        console.error('エラー', err);
+        wrong1 = "エラー..., Sorry";
+        wrong2 = "エラー..., Sorry";
+        wrong3 = "エラー..., Sorry";
+    }
+    
+
+    let item_list;
+    try {
+        item_list = shuffleArray([sentence, wrong1, wrong2, wrong3]);
+    } catch (err) {
+        console.error('エラー', err);
+        item_list = [sentence, wrong1, wrong2, wrong3];
+    }
+    
+    // res.header('Access-Control-Allow-Origin', '*');
     res.json({
         "ans":sentence,
         "item_list":item_list,
@@ -230,6 +256,12 @@ app.post('/history', async (req, res) => {
     const user_id = req.status;
     const lesson = req.query.lesson;
     const history = req.body.history;
+
+    if (lesson === undefined || history === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
 
     const level = lessonToLevel[lesson][0];
     const type = lessonToLevel[lesson][1];
@@ -357,16 +389,20 @@ app.get('/ilesson-test', async (req, res) => {
 
     // console.log(result);
     // console.log(result[0].length);
-    
-    const sentence = result[0][number-1]['sentence'];
-    const word = result[0][number-1]['word_name'];
-    const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+
     let text_data;
+    let sentence;
     try {
+        sentence = result[0][number-1]['sentence'];
+        const word = result[0][number-1]['word_name'];
+        const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+
         text_data = await fs.readFile(b64_data_path, 'utf8');
     } catch (err) {
+        sentence = "エラー..., Sorry";
+        text_data = ["..."];
         console.error('ファイル読み込みエラー:', err);
-        res.status(500).send('ファイル読み込みエラー');
+        // res.status(500).send('ファイル読み込みエラー');
     }
     
     let num = number;
@@ -374,33 +410,39 @@ app.get('/ilesson-test', async (req, res) => {
         num = 0;
     }
 
-    const wrong1_word = result[0][number+2]['word_name'];
-    const wrong1_b64_data_path = path.join('./new_data_set/data/', result[0][number+2]['level'] + '_' + result[0][number+2]['type'], wrong1_word, 'image' + result[0][number+2]['image_id'] + '.text');
     let wrong1_text_data;
     try {
+        const wrong1_word = result[0][number+2]['word_name'];
+        const wrong1_b64_data_path = path.join('./new_data_set/data/', result[0][number+2]['level'] + '_' + result[0][number+2]['type'], wrong1_word, 'image' + result[0][number+2]['image_id'] + '.text');
+    
         wrong1_text_data = await fs.readFile(wrong1_b64_data_path, 'utf8');
     } catch (err) {
+        wrong1_text_data = ["..."];
         console.error('ファイル読み込みエラー:', err);
-        res.status(500).send('ファイル読み込みエラー');
+        // res.status(500).send('ファイル読み込みエラー');
     }
-    
-    const wrong2_word = result[0][number+3]['word_name'];
-    const wrong2_b64_data_path = path.join('./new_data_set/data/', result[0][number+3]['level'] + '_' + result[0][number+3]['type'], wrong2_word, 'image' + result[0][number+3]['image_id'] + '.text');
     let wrong2_text_data;
+    
     try {
+        const wrong2_word = result[0][number+3]['word_name'];
+        const wrong2_b64_data_path = path.join('./new_data_set/data/', result[0][number+3]['level'] + '_' + result[0][number+3]['type'], wrong2_word, 'image' + result[0][number+3]['image_id'] + '.text');
+    
         wrong2_text_data = await fs.readFile(wrong2_b64_data_path, 'utf8');
     } catch (err) {
+        wrong2_text_data = ["..."];
         console.error('ファイル読み込みエラー:', err);
-        res.status(500).send('ファイル読み込みエラー');
+        // res.status(500).send('ファイル読み込みエラー');
     }
-    const wrong3_word = result[0][number+4]['word_name'];
-    const wrong3_b64_data_path = path.join('./new_data_set/data/', result[0][number+4]['level'] + '_' + result[0][number+4]['type'], wrong3_word, 'image' + result[0][number+4]['image_id'] + '.text');
+    
     let wrong3_text_data;
     try {
+        const wrong3_word = result[0][number+4]['word_name'];
+        const wrong3_b64_data_path = path.join('./new_data_set/data/', result[0][number+4]['level'] + '_' + result[0][number+4]['type'], wrong3_word, 'image' + result[0][number+4]['image_id'] + '.text');
         wrong3_text_data = await fs.readFile(wrong3_b64_data_path, 'utf8');
     } catch (err) {
+        wrong3_text_data = ["..."];
         console.error('ファイル読み込みエラー:', err);
-        res.status(500).send('ファイル読み込みエラー');
+        // res.status(500).send('ファイル読み込みエラー');
     }
     
     const item_list = shuffleArray(["0data:image/png;base64," + text_data, "1data:image/png;base64," + wrong1_text_data, "2data:image/png;base64," + wrong2_text_data, "3data:image/png;base64," + wrong3_text_data]);
@@ -414,13 +456,15 @@ app.get('/ilesson-test', async (req, res) => {
     // console.log(ans);
     // console.log(sentence);
     // console.log(item_list);
-    res.header('Access-Control-Allow-Origin', '*');
+    
     console.log("_______________");
     // console.log(ansWords);
     // console.log(item_list.length);
     console.log(ans);
     console.log("_______________");
     // console.log(item_list[0]);
+
+    // res.header('Access-Control-Allow-Origin', '*');
     res.json({
         "ans": ans,
         "images":item_list,
