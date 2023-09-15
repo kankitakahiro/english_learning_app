@@ -72,17 +72,17 @@ app.get('/', (req, res) => {
 });
 
 // ログインのトークンを調べる
-// app.use( async (req, res, next) => {
-//     try {
-//         const idToken = req.headers.authorization;
-//         const decodedToken = await admin.auth().verifyIdToken(idToken);
-//         req.status = decodedToken.uid;
-//     } catch (error) {
-//         console.log(error);
-//         req.status = false;
-//     }
-//     next();
-// });
+app.use( async (req, res, next) => {
+    try {
+        const idToken = req.headers.authorization;
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        req.status = decodedToken.uid;
+    } catch (error) {
+        console.log(error);
+        req.status = false;
+    }
+    next();
+});
 
 // ログイン認証
 // ユーザーの新規登録はfirebaseに直接アクセスして行う
