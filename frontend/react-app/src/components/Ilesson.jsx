@@ -70,9 +70,11 @@ export default function Ilesson() {
                     const jsonData = await response.json();
                     setAnswer(jsonData.ans);
                     setImages(jsonData.images);
+                    console.log("image reload")
                     setWord(jsonData.word);
                     setHistory(...history, jsonData.history);
                 }
+                navigate(`/ilesson/${id}/${number}`);
             } catch (error) {
                 console.error('データの取得エラー:', error);
             }
@@ -82,7 +84,6 @@ export default function Ilesson() {
             navigate(`/ilesson/${id}/result/${score}`);
         } else {
             fetchGet();
-            navigate(`/ilesson/${id}/${number}`);
         }
     }, [number]);
 
