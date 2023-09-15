@@ -35,7 +35,7 @@ export default function Tlesson() {
                     history: history
                 };
                 const retrievedToken = sessionStorage.getItem("authToken");
-                const response = await fetch(`${REACT_APP_DEV_URL}/history`, {
+                await fetch(`${REACT_APP_DEV_URL}/history`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -71,7 +71,7 @@ export default function Tlesson() {
         } else {
             fetchGet();
         }
-    }, [history, id, navigate, number, score]);
+    }, [number]);
 
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
