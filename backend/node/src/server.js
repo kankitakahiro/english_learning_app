@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs').promises;
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
-const mysql = require('mysql2');
+const mysql = require('mysql2/promise');
 const { exec } = require('child_process');
 
 // 本番環境の時はDockerfileでNODE_ENV=productionを指定してください
@@ -69,17 +69,16 @@ app.get('/', (req, res) => {
 });
 
 // ログインのトークンを調べる
-app.use(async (req, res, next) => {
+app.use( async (req, res, next) => {
     try {
         const idToken = req.headers.authorization;
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         req.status = decodedToken.uid;
-        next();
     } catch (error) {
         console.log(error);
         req.status = false;
-        next();
     }
+    next();
 });
 
 // ログイン認証
@@ -104,6 +103,167 @@ app.post('/verifyToken', async (req, res) => {
         res.status(401).send('Token is not valid');
     }
 });
+// ____________________________________________________
+//  * id | word_name | level | type | sentence | image_id |
+//  * ____________________________________________________
+const lessonToLevel = {
+    "1": ["daily", "mix", "B1", "noun"],
+    "2": ["B1", "verb"],
+    "3": ["B2", "noun"],
+    "4": ["B2", "verb"],
+    "5": ["special", "noun"],
+};
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // 0からiの間のランダムなインデックスを生成
+        [array[i], array[j]] = [array[j], array[i]];  // 要素を交換
+    }
+    return array;
+}
+
+app.get('/lesson-test', async (req, res) => {
+    // req.queryでクエリパラメータにlessonと単語番号が入っている
+    // 例: http://localhost:8080/lesson-test?lesson=1&number=1
+    const lesson = req.query.lesson;
+    const number = parseInt(req.query.number);
+
+    const level = lessonToLevel[lesson][0];
+    const type = lessonToLevel[lesson][1];
+
+    if (lesson === undefined || number === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    let whereQeury = "WHERE level = ? AND type = ?";
+    if (lesson === "1") {
+        whereQeury = "WHERE ((level = ? AND type = ?) OR (level = ? AND type = ?))";
+    }
+
+    const execQuery = `
+        SELECT id, word_name, level, type, sentence, image_id
+        FROM (
+            SELECT id, word_name, level, type, sentence, image_id,
+                ROW_NUMBER() OVER(PARTITION BY word_name ORDER BY RAND()) as row_num
+            FROM lesson_data
+            ${whereQeury}
+        ) AS subquery
+        WHERE row_num = 1
+        ORDER BY word_name;
+    `;
+    let result;
+    try {
+        result = await pool.query(execQuery, lessonToLevel[lesson]);
+        console.log(result[0][number-1]['word_name']);
+    } catch (err) { 
+        console.error('データベース操作エラー:', err);
+        res.status(500).send('データベース操作エラー');
+    }
+
+    console.log(result);
+    console.log(result[0].length);
+    
+    const sentence = result[0][number-1]['sentence'];
+    const word = result[0][number-1]['word_name'];
+    const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+    let text_data;
+    try {
+        text_data = await fs.readFile(b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
+    
+    let num = number;
+    if (number > 5) {
+        num = 0;
+    }
+    const wrong1 = result[0][num]['sentence'];
+    const wrong2 = result[0][num+1]['sentence'];
+    const wrong3 = result[0][num+2]['sentence'];
+
+    const item_list = shuffleArray([sentence, wrong1, wrong2, wrong3]);
+    res.header('Access-Control-Allow-Origin', '*');
+    res.json({
+        "ans":sentence,
+        "item_list":item_list,
+        "image": "data:image/png;base64," + text_data,
+        "history": result[0][number-1]['image_id']
+    });
+
+});
+
+app.post('/lesson-end', async (req, res) => {
+    const user_id = req.status;
+    if (user_id === false) {
+        res.status(401).send('Token is not valid');
+        return;
+    }
+    const lesson = req.body.lesson;
+    const number = req.body.number;
+    const query = `
+        INSERT INTO user_lesson (user_id, word_name, image_id)
+        VALUES (?, ?, ?)
+    `;
+});
+
+/**
+ *       index 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+ * list = [1, 3, ]
+ * res.json({
+ *      "ans":sentence,
+ *      "item_list":item_list,
+ *      "image": "data:image/png;base64," + text_data,
+ *      "history": 番号を返します
+ *  });
+ * 
+ * 
+ */
+
+app.post('/history', async (req, res) => {
+    const user_id = req.status;
+    const lesson = req.query.lesson;
+    const history = req.body.history;
+
+    const level = lessonToLevel[lesson][0];
+    const type = lessonToLevel[lesson][1];
+
+    if (user_id === false) {
+        res.status(401).send('Token is not valid');
+        return;
+    }
+    const execQuery = `
+        SELECT word_name, sentence
+        FROM lesson_data
+        WHERE level = ? AND type = ?
+        ORDER BY word_name;
+    `;
+    let result;
+    try {
+        result = await pool.query(execQuery, [level, type]);
+    } catch (err) { 
+        console.error('データベース操作エラー:', err);
+        res.status(500).send('データベース操作エラー');
+    }
+    let history_list = [0]* 10;
+    for (let i = 0; i < result[0].length; i++) {
+        const word = result[0][i]['word_name'];
+        const b64_data_path = path.join('./new_data_set/data/', result[0][i]['level'] + '_' + result[0][i]['type'], word, 'image' + history[i] + '.text');
+        let text_data;
+        try {
+            text_data = await fs.readFile(b64_data_path, 'utf8');
+        } catch (err) {
+            console.error('ファイル読み込みエラー:', err);
+            res.status(500).send('ファイル読み込みエラー');
+        }
+        history_list[i] = {
+            title: "Lessson"+i+1,
+            question: []
+        };
+    }
+
+});
 
 // ********************************** ここから *******************************************************
 
@@ -113,20 +273,10 @@ function intRandom(min, max){
 }
 
 
-app.get('/lesson-test', (req, res) => {
-    // req.queryでクエリパラメータにlessonと単語番号が入っている
-    // 例: http://localhost:8080/lesson-test?lesson=1&number=1
-    const lesson = req.query.lesson;
-    const number = req.query.number;
-
-    if (lesson === undefined || number === undefined) {
-        res.status(400).send('Bad Request');
-        return;
-    }
-});
 
 // テスト用のエンドポイント
 app.get('/lesson-test', (req, res) => {
+    console.log("lesson-test");
     // req.queryでクエリパラメータにlessonと単語番号が入っている
     // 例: http://localhost:8080/lesson-test?lesson=1&number=1
     const lesson = req.query.lesson;
@@ -203,15 +353,31 @@ app.get('/lesson-test', (req, res) => {
     });
 });
 
+// id | word_name | level | type | sentence | image_id |
 // ルートハンドラーの定義
-app.get('/mysql',  (req, res) => {
+app.get('/mysql',  async (req, res) => {
     try {
         dotenv.config();
             // 例: クエリの実行
-        pool.query('SELECT count(*) FROM lesson_data', (err, results) => {
-            if (err) throw err;
-            console.log(results);
-        });
+        // const test_query = `
+        //     SELECT id, word_name, level, type, sentence, image_id
+        //     FROM (
+        //         SELECT id, word_name, level, type, sentence, image_id,
+        //             ROW_NUMBER() OVER(PARTITION BY word_name ORDER BY RAND()) as row_num
+        //         FROM lesson_data
+        //         WHERE level = 'B1' AND type = 'noun'
+        //     ) AS subquery
+        //     WHERE row_num = 1;
+        // `;
+
+        const test_query = `
+            SELECT id, word_name, level, type, sentence, image_id
+            FROM lesson_data
+            WHERE level = 'B1' AND type = 'noun'
+        `;
+
+        const result = await pool.query(test_query);
+        console.log(result);
         console.log("development");
     } catch (err) {
         console.error('データベース操作エラー:', err);
@@ -232,7 +398,6 @@ app.get('/mysql',  (req, res) => {
  * type : 単語のタイプ(noun, verb, mix, other)
  * sentence : 単語の例文
  * image_id : 単語の番号(image1 〜 max(image4))
- * 
  * 
  * tabele user_data -> ユーザーのデータ
  * __________________________
