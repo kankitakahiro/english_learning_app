@@ -6,7 +6,8 @@ body {
   width: 390px;
   height: 800px;
   margin: 30px auto;
-  border: solid;
+  border: solid 1px gray;
+  border-radius: 0.7rem;
   position: relative;
 }
 body #root {
@@ -160,6 +161,8 @@ ul {
 .word-area1, .answer-word-area, .word-area2 {
   font-size: medium;
   width: 95%;
+  padding: 8px;
+  height: 60px;
   justify-content: center;
 }
 
@@ -168,8 +171,9 @@ ul {
 }
 
 .answer-word-area {
+  height: auto;
   margin-bottom: 2rem;
-  margin-top: 4rem;
+  margin-top: 2rem;
 }
 
 .answer-img-table {
