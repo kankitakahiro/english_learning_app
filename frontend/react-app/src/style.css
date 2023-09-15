@@ -74,6 +74,7 @@ ul {
   list-style: none;
   padding: 0;
   overflow: auto;
+  max-height: 600px;
 }
 
 .logo-area {
@@ -166,12 +167,13 @@ ul {
 
 .answer-word-area {
   height: auto;
-  margin: auto 1rem;
+  margin: 3rem 1rem 4rem 1rem;
   background-color: white;
   border: 1px solid #8AB5DE;
 }
 
 .answer-img-table {
+  margin-top: 3rem;
   width: 100%;
   text-align: center;
 }
