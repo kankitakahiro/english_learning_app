@@ -1,5 +1,5 @@
 // LoginForm.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
 import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } from 'react-router-dom';
 import { auth } from './firebaseConfig';
@@ -13,7 +13,21 @@ export default function Sign() {
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const [showModal, setShowModal] = useState(false);
+    const [imageSrc, setImageSrc] = useState('');
 
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/logo_sample.png');
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
+            } catch (error) {
+                console.error('画像の読み込みエラー:', error);
+            }
+        };
+        loadImage();
+    }, []);
     function closeModal() {
         setShowModal(false);
         setMessage('');
@@ -72,7 +86,7 @@ export default function Sign() {
 
     return (
         <>
-            <Header />
+            <Header imgUrl={imageSrc} />
             <main className='sign'>
                 <div>
                     <form onSubmit={handleSubmitSingIn} className='login-form'>

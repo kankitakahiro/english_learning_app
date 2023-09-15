@@ -14,7 +14,21 @@ export default function History() {
     const [history, setHistory] = useState([]);
     // const [showModal, setShowModal] = useState(false);
 
+    const [imageSrc, setImageSrc] = useState('');
 
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/logo_sample.png');
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
+            } catch (error) {
+                console.error('画像の読み込みエラー:', error);
+            }
+        };
+        loadImage();
+    }, []);
     useEffect(() => {
         const retrievedToken = sessionStorage.getItem("authToken");
         const response = fetch(`${REACT_APP_DEV_URL}/history`, {
@@ -87,7 +101,7 @@ export default function History() {
     );
     return (
         <>
-            <Header />
+            <Header imgUrl={imageSrc} />
             <p>Your Hisorys</p>
             <ul>{lessons}</ul>
             {/* <Modal
