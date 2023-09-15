@@ -310,22 +310,22 @@ app.get('/history', async (req, res) => {
                     // console.log(text_data);
                     // console.log(tmp);
                     tmp++;   
-                    if (j == 0){
+                    
                         
-                        if (j == 0) {
-                            history_list[i].questions = [{ word: word, image: "data:image/png;base64," + text_data }];
-                        } else {
-                            history_list[i].questions.push({ word: word, image: "data:image/png;base64," + text_data });
-                        }
-                        // console.log("_______________");
-                        // console.log("_______________");
-                        // console.log("_______________");
-                        // console.log(history_list);
-                        // console.log("_______________");
-                    }else {
-                        history_list[i]['questions'].append({'word': word, "image": "data:image/png;base64," + text_data})
+                    if (j == 0) {
+                        history_list[i].questions = [{ word: word, image: "data:image/png;base64," + text_data }];
+                    } else {
+                        history_list[i].questions.push({ word: word, image: "data:image/png;base64," + text_data });
                     }
-                    // console.log(history_list[i]);
+                    // console.log("_______________");
+                    // console.log("_______________");
+                    // console.log("_______________");
+                    // console.log(history_list);
+                    // console.log("_______________");
+                   
+                    console.log(history_list[i]);
+
+                    
                     
 
                 } catch (err) {
