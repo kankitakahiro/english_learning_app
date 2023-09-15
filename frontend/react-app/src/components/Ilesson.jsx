@@ -63,7 +63,7 @@ export default function Ilesson() {
         };
         const fetchGet = async () => {
             try {
-                const response = await fetch(`${REACT_APP_DEV_URL}/ilsson-test?lesson=${id}&number=${number}`);
+                const response = await fetch(`${REACT_APP_DEV_URL}/ilesson-test?lesson=${id}&number=${number}`);
                 if (!response.ok) {
                     throw new Error('データの取得に失敗しました。');
                 }
