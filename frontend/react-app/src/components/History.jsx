@@ -42,7 +42,8 @@ export default function History() {
             throw new Error('Network response was not ok');
         }
         else {
-            setHistory(response.json)
+            const jsonData = response.json();
+            setHistory(jsonData.history)
         }
     }, []);
     const historyList = [
@@ -110,6 +111,9 @@ export default function History() {
                 style={customStyles}
             >
             </Modal> */}
+            <div className='footer-s'>
+                <Link to="/" className='btn-p'>HOME</Link>
+            </div>
 
         </>
     );

@@ -201,8 +201,8 @@ ul {
 
 .your-score-area {
   background-color: #FDCD72;
-  width: 70%;
-  height: 200px;
+  width: 80%;
+  height: 266.6666666667px;
   margin: 4rem auto;
   padding: 1rem;
   border-radius: 0.375rem;
@@ -215,13 +215,13 @@ ul {
 }
 .your-score-area .score-row-2 {
   position: absolute;
-  bottom: 2rem;
+  bottom: 1rem;
   width: 100%;
 }
 .your-score-area .score-row-2 div {
   display: flex;
   justify-content: space-around;
-  align-items: end;
+  align-items: center;
   margin: auto auto 0 auto;
 }
 .your-score-area .score-row-2 div .is {

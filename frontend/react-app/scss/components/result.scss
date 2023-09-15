@@ -1,7 +1,7 @@
 .your-score-area {
     background-color: $secondary;
-    width: 70%;
-    height: calc($display-height/4);
+    width: 80%;
+    height: calc($display-height/3);
     margin: 4rem auto;
     padding: 1rem;
     border-radius: $radius;
@@ -15,7 +15,7 @@
 
     .score-row-2 {
         position: absolute;
-        bottom: 2rem;
+        bottom: 1rem;
         width: 100%;
 
         div {
