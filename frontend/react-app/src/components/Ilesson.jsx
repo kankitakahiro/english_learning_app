@@ -13,7 +13,7 @@ export default function Ilesson() {
 
     const { id } = useParams();
     const [word, setWord] = useState('');
-    const [answer, setAnswer] = useState('');
+    let [answer, setAnswer] = useState(0);
     const [images, setImages] = useState([]);
     const [history, setHistory] = useState([]);
     const [number, setNumber] = useState(1);
@@ -46,21 +46,24 @@ export default function Ilesson() {
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
-                    console.log("__________________________");
-                    console.log(data);
-                    setAnswer(data.answer);
-                    setImages(data.image);
+                    setAnswer(parseInt(data.ans));
+                    setImages(data.images);
                     setWord(data.word);
-                    setHistory(...history, data.history);
+                    setHistory([...history, data.history]);
                     navigate(`/ilesson/${id}/${number}`);
-                })
+                }).catch((error) => {
+                    console.log("エラ----------------");
+                    console.error('Error:', error);
+                });
         }
-    }, [number, history, id, navigate, score]);
+    }, [number]);
 
 
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
-        if (word === answer) {
+        if (word == answer) {
+            console.log("word:", word);
+            console.log("answer",answer);
             setScore(score + 1);
             setShowCorrectModal(true);
         } else {
