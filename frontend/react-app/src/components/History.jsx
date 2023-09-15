@@ -7,7 +7,7 @@ import { REACT_APP_DEV_URL } from '..';
 
 import Accordion from 'react-bootstrap/Accordion';
 
-export default function Home() {
+export default function History() {
 
     // const [word, setWord] = useState('');
     // const [image, setImage] = useState('');

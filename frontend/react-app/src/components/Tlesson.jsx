@@ -27,7 +27,7 @@ export default function Tlesson() {
     useEffect(() => {
         if (number === 11) {
             const retrievedToken = sessionStorage.getItem("authToken");
-            fetch(`${REACT_APP_DEV_URL}/verifyToken`, {
+            fetch(`${REACT_APP_DEV_URL}/history`, {
                 // const response = await fetch('http://localhost:8080/verifyToken', {
                 method: 'POST',
                 headers: {
@@ -41,7 +41,7 @@ export default function Tlesson() {
             });
             navigate(`/tlesson/${id}/result/${score}`);
         } else {
-            fetch(`${REACT_APP_DEV_URL} / tlesson - test ? lesson = ${id} & number=${number}`)
+            fetch(`${REACT_APP_DEV_URL}/tlesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/ lesson - test ? lesson = ${ id } & number=${ number }`)
                 .then(response => response.json())
                 .then(data => {
@@ -49,7 +49,7 @@ export default function Tlesson() {
                     setWords(data.item_list);
                     setImage(data.image);
                     setHistory(...history, data.history)
-                    navigate(`/ tlesson / ${id} / ${number}`);
+                    navigate(`/tlesson/${id}/${number}`);
                 });
         }
     }, [number]);

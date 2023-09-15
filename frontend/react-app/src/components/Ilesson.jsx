@@ -41,7 +41,7 @@ export default function Ilesson() {
             });
             navigate(`/ilesson/${id}/result/${score}`);
         } else {
-            fetch(`${REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
+            fetch(`${REACT_APP_DEV_URL}/ilesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
