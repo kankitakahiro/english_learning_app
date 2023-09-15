@@ -2,10 +2,11 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 const mysql = require('mysql');
+
 
 // 本番環境の時はDockerfileでNODE_ENV=productionを指定してください
 // ここで環境変数を指定します
@@ -184,6 +185,7 @@ app.get('/lesson-test', (req, res) => {
 // アプリ開始時に確認する.
 const readline = require('readline');
 const { create } = require('domain');
+const { table } = require('console');
 
 app.get('/addsql', async (req, res) => {
     fs.readdir('./text', async (err, files) => {
@@ -296,7 +298,7 @@ app.get('/mysql',  (req, res) => {
     try {
         dotenv.config();
             // 例: クエリの実行
-        pool.query('SELECT * FROM question', (err, results) => {
+        pool.query('SELECT count(*) FROM lesson_data', (err, results) => {
             if (err) throw err;
             console.log(results);
         });
@@ -305,6 +307,185 @@ app.get('/mysql',  (req, res) => {
         console.error('データベース操作エラー:', err);
         res.status(500).send('データベース操作エラー');
     }
+});
+
+// ********************************** ここまで *******************************************************
+
+/**
+ * table lesson_data -> 単語のデータ
+ * ____________________________________________________
+ * id | word_name | level | type | sentence | image_id |
+ * ____________________________________________________
+ * is : primary key
+ * word : 単語の名前
+ * level : 単語のレベル(B1,B2,C1,C2,daily, countable-uncountable)
+ * type : 単語のタイプ(noun, verb, mix, other)
+ * sentence : 単語の例文
+ * image_id : 単語の番号(image1 〜 max(image4))
+ * 
+ * 
+ * tabele user_data -> ユーザーのデータ
+ * __________________________
+ * id | user_name | user_id |
+ * __________________________
+ * id : primary key
+ * user_name : ユーザーの名前
+ * user_id : ユーザーのID(firebaseのUID)
+ * 
+ * 
+ * table user_lesson　-> ユーザーの学習データ
+ * _____________________________________
+ * id | word_name | user_id | image_id |
+ * _____________________________________
+ * id : primary key
+ * word_name : 単語の名前
+ * user_id : ユーザーのID(firebaseのUID)
+ * image_id : 単語の番号(image1 〜 max(image4))
+ */
+var count = 0;
+// データベースに新しくデータを追加するエンドポイントです
+// このエンドポイントは、アプリの開発時にのみ使用します
+app.get('/development-mysl/init-table', async(req, res) => {
+    const table_name = req.query.table_name;
+
+    if (table_name === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    if (table_name !== 'lesson_data') {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    // pool.query('DROP TABLE lesson_data', (err, results) => {
+    //     if (err) throw err;
+    //     console.log(results);
+    // });
+
+    const query = `SHOW TABLES LIKE ?`;
+    let ans;
+    pool.query(query, [table_name], (err, results) => {
+        if (err) throw err;
+        
+        ans = results;
+        if (ans.length === 0) {
+            console.error('テーブルが存在しません。テーブルを作成します。');
+            // primary key(int) | word_name(str) | level(str) | type(str) | sentence(str) | image_id(int) |
+            const query = `CREATE TABLE ${table_name} (
+                id INT NOT NULL AUTO_INCREMENT,
+                word_name VARCHAR(255) NOT NULL,
+                level VARCHAR(255) NOT NULL,
+                type VARCHAR(255) NOT NULL,
+                sentence VARCHAR(255) NOT NULL,
+                image_id INT NOT NULL,
+                PRIMARY KEY (id)
+            )`;
+            pool.query(query, (err, results) => {
+                if (err) throw err;
+                console.log(results);
+            });
+        } else {
+            console.error('テーブルが存在します。');
+            return;   
+        }
+    });
+
+    
+});
+
+// データベースに新しくデータを追加するエンドポイントです
+// このエンドポイントは、アプリの開発時にのみ使用します
+// データはローカルのファイルから読み込みます
+app.get('/development-mysl/add-data', async (req, res) => {
+    const table_name = req.query.table_name;
+
+    if (table_name === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    if (table_name !== 'lesson_data') {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    if (count !== 0) {
+        res.status(400).send('Bad Request');
+        return;
+    }
+    return;
+
+    count ++;
+    console.log(count);
+
+    let dataJson; // データを格納する
+    const query = `INSERT INTO ${table_name} SET ?`; // データを追加するクエリ
+
+    // ローカルファイルからデータを読み込む
+    const initialPath = './new_data_set';
+    const data_file_path = initialPath + '/sentence';
+    const directoryPath = path.join(data_file_path);
+
+    // ./sentence直下のlevel別のディレクトリを取得
+    let file_set = await fs.readdir(directoryPath);
+    // file_set = ['B1_noun'];
+
+    res.status(200).send('OK');
+    // console.log(typeof(file_set));
+    let total = 0;
+    // レベル別ディレクトリの中のwordテキストファイルを取得
+    for (let each_level of file_set) {
+        const level_type = each_level.split('_');
+        const level = level_type[0];
+        const type = level_type[1];
+        // console.log(each_level);
+        const level_directoryPath = path.join(data_file_path, each_level);
+        text_list = await fs.readdir(level_directoryPath);
+        // console.log(text_list);
+        // 各テキストファイルの中身と名前を取得し、images, dataの中からも取得する
+        for (let each_text of text_list) {
+            word_name = each_text.replace('.text', '');
+            // console.log(word_name);
+            const text_directoryPath = path.join(level_directoryPath, each_text);
+            const text_data = await fs.readFile(text_directoryPath, 'utf8');
+            const context = text_data.split('\n');
+            // console.log(context);
+            // 各文章について, dataの中からも取得する
+            for (let i = 1; i < context.length; i++) {
+                // id | word_name | level | type | sentence | image_id |
+                console.log(word_name, level, type, context[i-1], 'image_id'+(i));
+                dataJson = {
+                    word_name: word_name,
+                    level: level,
+                    type: type,
+                    sentence: context[i-1],
+                    image_id: i
+                };
+                console.log(dataJson);
+                // データを追加する
+                // setInterval(function () {
+                //     // 処理
+                //     // pool.query(query, dataJson, (err, results) => {
+                //     //     if (err) throw err;
+                //     //     console.log(results);
+                //     // });
+                //     console.log(dataJson);
+                // }, 1000);
+                total ++;
+                pool.query(query, dataJson, (err, results) => {
+                    if (err) throw err;
+                        console.log(results);
+                });
+                
+            }
+        }
+    }
+    console.log(total);
+    
+    return;
+
+    
 });
 
 app.listen(PORT, () => {
