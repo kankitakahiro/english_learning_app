@@ -27,7 +27,9 @@ export default function Home() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        setHistory(response)
+        else {
+            setHistory(response.json)
+        }
     }, []);
     const historyList = [
         {
