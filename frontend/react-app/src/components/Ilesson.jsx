@@ -56,7 +56,8 @@ export default function Ilesson() {
                     console.error('Error:', error);
                 });
         }
-    }, [number, id, navigate, score]);
+    }, [number]);
+    // }, [number, id, navigate, score]);
 
 
     // Called when User answer question after that Show modal
