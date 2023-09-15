@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
 import Header from './Header';
+import { useEffect, useState } from 'react';
 
 
 /*
@@ -10,9 +11,25 @@ export default function Tresult() {
 
     const { id } = useParams();
     const { score } = useParams();
+    const [imageSrc, setImageSrc] = useState('');
+
+
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/logo_sample.png');
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
+            } catch (error) {
+                console.error('画像の読み込みエラー:', error);
+            }
+        };
+        loadImage();
+    }, []);
     return (
         <>
-            <Header />
+            <Header imgUrl={imageSrc} />
             <main>
                 <div className='tlesson-header'>
                     <h1>LESSON{id}</h1>

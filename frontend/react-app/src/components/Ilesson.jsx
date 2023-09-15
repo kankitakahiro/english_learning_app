@@ -23,41 +23,68 @@ export default function Ilesson() {
     // Decide whether or not to show the modal and Difine modal's design 
     const [showCorrectModal, setShowCorrectModal] = useState(false);
     const [showWrongModal, setShowWrongModal] = useState(false);
+    const [imageSrc, setImageSrc] = useState('');
 
+    useEffect(() => {
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/logo_sample.png');
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
+            } catch (error) {
+                console.error('画像の読み込みエラー:', error);
+            }
+        };
+        loadImage();
+    }, []);
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        if (number === 11) {
-            const retrievedToken = sessionStorage.getItem("authToken");
-            fetch(`${REACT_APP_DEV_URL}/result`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': retrievedToken
-                },
-                body: {
+        const fetchPost = async () => {
+            try {
+                const data = {
                     id: id,
                     history: history
-                },
-            });
-            navigate(`/ilesson/${id}/result/${score}`);
-        } else {
-            fetch(`${REACT_APP_DEV_URL}/ilesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/lesson-test?lesson=${id}&number=1`)
-                .then(response => response.json())
-                .then(data => {
-                    setAnswer(parseInt(data.ans));
-                    setImages(data.images);
-                    setWord(data.word);
-                    setHistory([...history, data.history]);
-                    navigate(`/ilesson/${id}/${number}`);
-                }).catch((error) => {
-                    console.log("エラ----------------");
-                    console.error('Error:', error);
+                };
+                const retrievedToken = sessionStorage.getItem("authToken");
+                await fetch(`${REACT_APP_DEV_URL}/history`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': retrievedToken
+                    },
+                    body: JSON.stringify(data)
                 });
+                navigate(`/ilsson/${id}/result/${score}`);
+            } catch (error) {
+                console.error('データの取得エラー:', error);
+            }
+        };
+        const fetchGet = async () => {
+            try {
+                const response = await fetch(`${REACT_APP_DEV_URL}/ilsson-test?lesson=${id}&number=${number}`);
+                if (!response.ok) {
+                    throw new Error('データの取得に失敗しました。');
+                }
+                else {
+                    const jsonData = await response.json();
+                    setAnswer(jsonData.answer);
+                    setImages(jsonData.images);
+                    setWord(jsonData.word);
+                    setHistory(...history, jsonData.history);
+                    navigate(`/ilesson/${id}/${number}`);
+                }
+            } catch (error) {
+                console.error('データの取得エラー:', error);
+            }
+        };
+        if (number === 11) {
+            fetchPost();
+        } else {
+            fetchGet();
         }
     }, [number]);
-    // }, [number, id, navigate, score]);
 
 
     // Called when User answer question after that Show modal
@@ -84,7 +111,7 @@ export default function Ilesson() {
 
     return (
         <>
-            <Header />
+            <Header imgUrl={imageSrc} />
             <main>
                 <div className='ilesson-header'>
                     <h1>LESSON{id}</h1>
