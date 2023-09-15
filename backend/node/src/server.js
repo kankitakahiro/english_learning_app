@@ -72,17 +72,17 @@ app.get('/', (req, res) => {
 });
 
 // ログインのトークンを調べる
-app.use( async (req, res, next) => {
-    try {
-        const idToken = req.headers.authorization;
-        const decodedToken = await admin.auth().verifyIdToken(idToken);
-        req.status = decodedToken.uid;
-    } catch (error) {
-        console.log(error);
-        req.status = false;
-    }
-    next();
-});
+// app.use( async (req, res, next) => {
+//     try {
+//         const idToken = req.headers.authorization;
+//         const decodedToken = await admin.auth().verifyIdToken(idToken);
+//         req.status = decodedToken.uid;
+//     } catch (error) {
+//         console.log(error);
+//         req.status = false;
+//     }
+//     next();
+// });
 
 // ログイン認証
 // ユーザーの新規登録はfirebaseに直接アクセスして行う
@@ -125,7 +125,8 @@ function shuffleArray(array) {
     return array;
 }
 
-app.get('/lesson-test', async (req, res) => {
+app.get('/tlesson-test', async (req, res) => {
+    console.log("tlesson");
     // req.queryでクエリパラメータにlessonと単語番号が入っている
     // 例: http://localhost:8080/lesson-test?lesson=1&number=1
     const lesson = req.query.lesson;
@@ -269,7 +270,7 @@ app.post('/history', async (req, res) => {
 });
 
 // テスト用のエンドポイント
-app.get('/ilesson', (req, res) => {
+app.get('/lesson-test', (req, res) => {
     console.log("lesson-test");
     // req.queryでクエリパラメータにlessonと単語番号が入っている
     // 例: http://localhost:8080/lesson-test?lesson=1&number=1
@@ -338,6 +339,7 @@ app.get('/ilesson', (req, res) => {
                         "ans": ans,
                         "item_list": item_list,
                         "image": "data:image/png;base64," + image_data,
+                        "history": "1"
                     });
                 });
 
