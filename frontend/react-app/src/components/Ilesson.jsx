@@ -46,8 +46,10 @@ export default function Ilesson() {
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
+                    console.log("__________________________");
+                    console.log(data);
                     setAnswer(data.answer);
-                    setImages(data.images);
+                    setImages(data.image);
                     setWord(data.word);
                     setHistory(...history, data.history);
                     navigate(`/ilesson/${id}/${number}`);

@@ -314,6 +314,8 @@ async function getDirectoryNames(directoryPath, level) {
 }
 // テスト用のエンドポイント
 app.get('/ilesson-test', async (req, res) => {
+    console.log("ilesson");
+    // return;
     // req.queryでクエリパラメータにlessonと単語番号が入っている
     // 例: http://localhost:8080/ilesson-test?lesson=1&number=1
     const lesson = req.query.lesson;
@@ -323,7 +325,7 @@ app.get('/ilesson-test', async (req, res) => {
         return;
     }
     // 問題のレベルを取得
-    console.log(lesson);
+    // console.log(lesson);
     let level;
     if (lesson === '1'){
         level = 'B1' ;
@@ -360,63 +362,80 @@ app.get('/ilesson-test', async (req, res) => {
     }
     // console.log(answer,wrong1)
     let selectWords = [words[randoms[0]],words[randoms[1]],words[randoms[2]],words[randoms[3]]];
-    console.log(selectWords);
+    // console.log(selectWords);
     var count = 0;
     let item_list = [];
     let ansWords
     for (const q of words) {
+        let answer;
         try {
-            const answer = await pool.query(
+            console.log(q.name);
+            answer = await pool.query(
                 'SELECT * FROM lesson_data WHERE word_name = ?',
                 [q.name]
             );
+        } catch (error) {
+            console.error('エラー:', error);
+        }
             const data = answer[0];
             console.log(data);
     
             const min = 0;
             const max = data.length;
     
-            const imageRandom = await generateUniqueRandoms(min, max, 1);
-            console.log(imageRandom);
+            // const imageRandom = await generateUniqueRandoms(min, max, 1);
+            // console.log(imageRandom);
+            let imageRandom = [1];
     
             const targetData = data[imageRandom[0]];
-            console.log(targetData);
+            // console.log(targetData);
     
-            const fileName = targetData.word_name + '/image' + targetData.image_id + '.text';
+            const fileName = targetData['word_name'] + '/image' + targetData['image_id'] + '.text';
             const filePath = path.join(q.path, fileName);
-            console.log(filePath);
+            console.log(filePath); 
     
             let image;
-            try {
-                image = await fs.readFile(filePath, 'utf-8');
-                // console.log(image);
-            } catch (error) {
-                console.error('エラー:', error);
-            }
+            // try {
+            //     image = await fs.readFile(filePath, 'utf-8');
+            //     // console.log(image);
+            // } catch (error) {
+            //     console.error('エラー:', error);
+            // }
+        try {
+            
+            image = await fs.readFile(filePath, 'utf-8');
+            console.log("取れました");
+        } catch (error) {
+            console.error('エラー:', error);
+        }
+            // console.log(image);
 
             const image_data = "data:image/png;base64," + image;
-            console.log(image_data);
+            // console.log(image_data);
             item_list.push(image_data);
+            console.log(item_list.length);
     
             if (count === 0) {
                 ansWords = targetData.sentence;
             }
-    
             count = count + 1;
-        } catch (error) {
-            console.error('エラー:', error);
-        }
     }
     res.header('Access-Control-Allow-Origin', '*');
+    console.log("_______________");
+    console.log(ansWords);
+    console.log(item_list.length);
+    console.log("_______________");
+    console.log(item_list[0]);
     res.json({
         "word":ansWords,
-        "ans":0,
+        "ans":"0",
         "image": item_list,
+        "image1": item_list[1],
+        "image2": item_list[2],
+        "image3": item_list[3],
+        "history": "0"
     });
-
-
-
-
+    // res.send("hello");
 });
 
 // ルートハンドラーの定義
