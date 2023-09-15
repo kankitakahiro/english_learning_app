@@ -5,7 +5,8 @@ const path = require('path');
 const fs = require('fs').promises;
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
-const mysql = require('mysql');
+const mysql = require('mysql2');
+const { exec } = require('child_process');
 
 // 本番環境の時はDockerfileでNODE_ENV=productionを指定してください
 // ここで環境変数を指定します
@@ -67,6 +68,20 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// ログインのトークンを調べる
+app.use(async (req, res, next) => {
+    try {
+        const idToken = req.headers.authorization;
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        req.status = decodedToken.uid;
+        next();
+    } catch (error) {
+        console.log(error);
+        req.status = false;
+        next();
+    }
+});
+
 // ログイン認証
 // ユーザーの新規登録はfirebaseに直接アクセスして行う
 app.post('/verifyToken', async (req, res) => {
@@ -97,52 +112,6 @@ function intRandom(min, max){
     return Math.floor( Math.random() * (max - min + 1)) + min;
 }
 
-app.get('/development-mysl/init-table', async(req, res) => {
-    const table_name = req.query.table_name;
-
-    if (table_name === undefined) {
-        res.status(400).send('Bad Request');
-        return;
-    }
-
-    if (table_name !== 'lesson_data' || table_name !== 'user_data' || table_name !== 'user_lesson') {
-        res.status(400).send('Bad Request');
-        return;
-    }
-
-    // pool.query('DROP TABLE lesson_data', (err, results) => {
-    //     if (err) throw err;
-    //     console.log(results);
-    // });
-
-    const query = `SHOW TABLES LIKE ?`;
-    let ans;
-    pool.query(query, [table_name], (err, results) => {
-        if (err) throw err;
-        
-        ans = results;
-        if (ans.length === 0) {
-            console.error('テーブルが存在しません。テーブルを作成します。');
-            // primary key(int) | word_name(str) | level(str) | type(str) | sentence(str) | image_id(int) |
-            const query = `CREATE TABLE ${table_name} (
-                id INT NOT NULL AUTO_INCREMENT,
-                word_name VARCHAR(255) NOT NULL,
-                level VARCHAR(255) NOT NULL,
-                type VARCHAR(255) NOT NULL,
-                sentence VARCHAR(255) NOT NULL,
-                image_id INT NOT NULL,
-                PRIMARY KEY (id)
-            )`;
-            pool.query(query, (err, results) => {
-                if (err) throw err;
-                console.log(results);
-            });
-        } else {
-            console.error('テーブルが存在します。');
-            return;   
-        }
-    });    
-});
 
 app.get('/lesson-test', (req, res) => {
     // req.queryでクエリパラメータにlessonと単語番号が入っている
