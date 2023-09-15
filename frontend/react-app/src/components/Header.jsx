@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function Header() {
+export default function Header({ imgUrl }) {
     return (
         <header>
-            <img src="logo_sample.png" alt="logo" className='header-img' />
+            <img src={imgUrl} alt="logo" className='header-img' />
         </header>
     );
 }

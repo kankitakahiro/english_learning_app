@@ -1,6 +1,7 @@
 .sign {
     // display: flex;
     // justify-content: center;
+    margin-top: 2rem;
     text-align: center;
 }
 
@@ -37,4 +38,8 @@
     border: 1px solid $primary;
     border-radius: $radius;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+#signedModal {
+    border: 1px solid black !important;
 }

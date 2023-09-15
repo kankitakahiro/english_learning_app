@@ -27,33 +27,65 @@ export default function Tlesson() {
 
     // Called only at first
     // Get words and image from backend;
+    const [imageSrc, setImageSrc] = useState('');
+
     useEffect(() => {
-        if (number === 11) {
-            const retrievedToken = sessionStorage.getItem("authToken");
-            fetch(`${REACT_APP_DEV_URL}/history`, {
-                // const response = await fetch('http://localhost:8080/verifyToken', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': retrievedToken
-                },
-                body: {
+        const loadImage = async () => {
+            try {
+                const response = await fetch('/logo_sample.png');
+                const blob = await response.blob();
+                const imageUrl = URL.createObjectURL(blob);
+                setImageSrc(imageUrl);
+            } catch (error) {
+                console.error('画像の読み込みエラー:', error);
+            }
+        };
+        loadImage();
+    }, []);
+
+    useEffect(() => {
+        const fetchPost = async () => {
+            try {
+                const data = {
                     id: id,
                     history: history
-                },
-            });
-            navigate(`/tlesson/${id}/result/${score}`);
-        } else {
-            fetch(`${REACT_APP_DEV_URL}/tlesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/ lesson - test ? lesson = ${ id } & number=${ number }`)
-                .then(response => response.json())
-                .then(data => {
-                    setAnswer(data.ans);
-                    setWords(data.item_list);
-                    setImage(data.image);
-                    setHistory(...history, data.history);
-                    navigate(`/tlesson/${id}/${number}`);
+                };
+                const retrievedToken = sessionStorage.getItem("authToken");
+                await fetch(`${REACT_APP_DEV_URL}/history`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': retrievedToken
+                    },
+                    body: JSON.stringify(data)
                 });
+                navigate(`/tlesson/${id}/result/${score}`);
+            } catch (error) {
+                console.error('データの取得エラー:', error);
+            }
+        };
+        const fetchGet = async () => {
+            try {
+                const response = await fetch(`${REACT_APP_DEV_URL}/tlesson-test?lesson=${id}&number=${number}`);
+                if (!response.ok) {
+                    throw new Error('データの取得に失敗しました。');
+                }
+                else {
+                    const jsonData = await response.json();
+                    setAnswer(jsonData.ans);
+                    setWords(jsonData.item_list);
+                    setImage(jsonData.image);
+                    setHistory(...history, jsonData.history);
+                    navigate(`/tlesson/${id}/${number}`); // データをstateに設定
+                }
+            } catch (error) {
+                console.error('データの取得エラー:', error);
+            }
+        };
+        if (number === 11) {
+            fetchPost();
+        } else {
+            fetchGet();
         }
     }, [number]);
 
@@ -79,13 +111,13 @@ export default function Tlesson() {
 
     return (
         <>
-            <Header />
+            <Header imgUrl={imageSrc} />
             <main>
                 <div className='tlesson-header'>
                     <h1>LESSON{id}</h1>
                     <div>{number}/10</div>
                 </div>
-                <img className='answer-img' src={image} alt='answer-img' /><br />
+                <img className='answer-img' src={image} alt='answer-img' />
                 <div className='select-answer-area'>
                     <span>Choose from below...</span>
                     <ul className='selects'>
@@ -109,7 +141,7 @@ export default function Tlesson() {
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
                     <img className='answer-img' src={image} alt='answer-img' /><br />
-                    <p className='word-area1'>{answer}</p>
+                    <p className='answer-word-area'>{answer}</p>
                 </div>
             </Modal>
 
@@ -122,7 +154,7 @@ export default function Tlesson() {
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
                     <img className='answer-img' src={image} alt='answer-img' /><br />
-                    <p className='word-area1'>{answer}</p>
+                    <p className='answer-word-area'>{answer}</p>
                 </div>
             </Modal>
         </>

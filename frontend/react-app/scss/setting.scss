@@ -16,7 +16,8 @@ body {
     width: $display-width;
     height: $display-height;
     margin: 30px auto;
-    border: solid;
+    border: solid 1px gray;
+    border-radius: 0.7rem;
     position: relative;
 
     #root {
@@ -34,10 +35,4 @@ img {
     // height: $img-height;
     border: 1px solid;
     border-radius: $radius;
-}
-
-header {
-    border: 1px solid;
-    height: 10%;
-    width: 100%;
 }
