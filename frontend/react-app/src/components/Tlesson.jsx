@@ -86,7 +86,7 @@ export default function Tlesson() {
                     <h1>LESSON{id}</h1>
                     <div>{number}/10</div>
                 </div>
-                <img className='answer-img' src={image} alt='answer-img' /><br />
+                <img className='answer-img' src={image} alt='answer-img' />
                 <div className='select-answer-area'>
                     <span>Choose from below...</span>
                     <ul className='selects'>
