@@ -51,11 +51,11 @@ export default function Tlesson() {
                     setAnswer(data.ans);
                     setWords(data.item_list);
                     setImage(data.image);
-                    setHistory(...history, data.history)
+                    setHistory(...history, data.history);
                     navigate(`/tlesson/${id}/${number}`);
                 });
         }
-    }, [number]);
+    }, [history, id, navigate, number, score]);
 
     // Called when User answer question after that Show modal
     function handleAnswer(word) {

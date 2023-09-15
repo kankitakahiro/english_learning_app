@@ -53,7 +53,7 @@ export default function Ilesson() {
                     navigate(`/ilesson/${id}/${number}`);
                 })
         }
-    }, [number, history, id, navigate, score]);
+    }, [history, id, navigate, number, score]);
 
 
     // Called when User answer question after that Show modal
