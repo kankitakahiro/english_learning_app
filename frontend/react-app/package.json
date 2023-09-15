@@ -46,5 +46,8 @@
   "main": "index.js",
   "author": "",
   "license": "ISC",
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "os-browserify": "^0.3.0"
+  }
 }
