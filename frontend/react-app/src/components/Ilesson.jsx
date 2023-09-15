@@ -70,10 +70,11 @@ export default function Ilesson() {
                     const jsonData = await response.json();
                     setAnswer(jsonData.ans);
                     setImages(jsonData.images);
-                    console.log("image reload")
+                    console.log("image reload\n", answer);
                     setWord(jsonData.word);
                     setHistory(...history, jsonData.history);
                 }
+                console.log('next page\n', number);
                 navigate(`/ilesson/${id}/${number}`);
             } catch (error) {
                 console.error('データの取得エラー:', error);
@@ -147,8 +148,8 @@ export default function Ilesson() {
             >
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
-                    <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
                     <p className='answer-word-area'>{word}</p>
+                    <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
                 </div>
             </Modal>
 
@@ -160,8 +161,8 @@ export default function Ilesson() {
             >
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
-                    <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
                     <p className='answer-word-area'>{word}</p>
+                    <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
                 </div>
             </Modal>
         </>
