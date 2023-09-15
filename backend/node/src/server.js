@@ -469,7 +469,7 @@ app.get('/ilesson-test', async (req, res) => {
         "ans": ans,
         "images":item_list,
         "word": sentence,
-        "history": 0
+        "history": result[0][number-1]['image_id']
     });
 
 });
