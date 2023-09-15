@@ -117,7 +117,7 @@ export default function Ilesson() {
             <main>
                 <div className='ilesson-header'>
                     <h1>LESSON{id}</h1>
-                    <div>{number - 1}/10</div>
+                    <div>{number}/10</div>
                 </div>
                 <p className='answer-word-area'>{word}</p>
                 <div className='select-answer-area'>
