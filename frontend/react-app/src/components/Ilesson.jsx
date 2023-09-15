@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { customStyles } from './Modal';
 import { REACT_APP_DEV_URL } from '..';
+import Header from './Header';
 
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
@@ -41,7 +42,7 @@ export default function Ilesson() {
             });
             navigate(`/ilesson/${id}/result/${score}`);
         } else {
-            fetch(`${REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
+            fetch(`${REACT_APP_DEV_URL}/ilesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/lesson-test?lesson=${id}&number=1`)
                 .then(response => response.json())
                 .then(data => {
@@ -77,7 +78,7 @@ export default function Ilesson() {
 
     return (
         <>
-            <header></header>
+            <Header />
             <main>
                 <div className='ilesson-header'>
                     <h1>LESSON{id}</h1>

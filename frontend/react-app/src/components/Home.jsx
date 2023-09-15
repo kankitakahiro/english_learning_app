@@ -36,6 +36,7 @@ export default function Home() {
         <>
             <main>
                 <div className="logo-area">
+                    <img src="logo_sample.png" alt="logo" />
                 </div>
                 <div className="select-lesson-area">
                     <span>image -> text..</span>

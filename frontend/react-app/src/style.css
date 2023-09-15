@@ -263,3 +263,9 @@ ul {
   border-radius: 0.375rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.header-img {
+  height: 100%;
+  width: auto;
+  margin-left: 0;
+}
