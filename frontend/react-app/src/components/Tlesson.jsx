@@ -28,33 +28,48 @@ export default function Tlesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        if (number === 11) {
-            const retrievedToken = sessionStorage.getItem("authToken");
-            fetch(`${REACT_APP_DEV_URL}/history`, {
-                // const response = await fetch('http://localhost:8080/verifyToken', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': retrievedToken
-                },
-                body: {
+        const fetchPost = async () => {
+            try {
+                const data = {
                     id: id,
                     history: history
-                },
-            });
-            navigate(`/tlesson/${id}/result/${score}`);
-        } else {
-            console.log(REACT_APP_DEV_URL);
-            fetch(`${REACT_APP_DEV_URL}/tlesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/ lesson - test ? lesson = ${ id } & number=${ number }`)
-                .then(response => response.json())
-                .then(data => {
-                    setAnswer(data.ans);
-                    setWords(data.item_list);
-                    setImage(data.image);
-                    setHistory(...history, data.history);
-                    navigate(`/tlesson/${id}/${number}`);
+                };
+                const retrievedToken = sessionStorage.getItem("authToken");
+                const response = await fetch(`${REACT_APP_DEV_URL}/history`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': retrievedToken
+                    },
+                    body: JSON.stringify(data)
                 });
+                navigate(`/tlesson/${id}/result/${score}`);
+            } catch (error) {
+                console.error('データの取得エラー:', error);
+            }
+        };
+        const fetchGet = async () => {
+            try {
+                const response = await fetch(`${REACT_APP_DEV_URL}/history`);
+                if (!response.ok) {
+                    throw new Error('データの取得に失敗しました。');
+                }
+                else {
+                    const jsonData = await response.json();
+                    setAnswer(jsonData.ans);
+                    setWords(jsonData.item_list);
+                    setImage(jsonData.image);
+                    setHistory(...history, jsonData.history);
+                    navigate(`/tlesson/${id}/${number}`); // データをstateに設定
+                }
+            } catch (error) {
+                console.error('データの取得エラー:', error);
+            }
+        };
+        if (number === 11) {
+            fetchPost();
+        } else {
+            fetchGet();
         }
     }, [history, id, navigate, number, score]);
 
