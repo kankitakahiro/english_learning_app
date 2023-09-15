@@ -49,6 +49,8 @@
     @extend .lesson;
     font-size: medium;
     width: 95%;
+    padding: 8px;
+    height: 60px:;
     justify-content: center;
 }
 
@@ -59,8 +61,9 @@
 
 .answer-word-area {
     @extend .word-area1;
+    height: auto;
     margin-bottom: 2rem;
-    margin-top: 4rem;
+    margin-top: 2rem;
 }
 
 .answer-img-table {
