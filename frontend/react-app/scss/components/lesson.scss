@@ -42,12 +42,13 @@
 .select-answer-area {
     @extend .select-lesson-area;
     background-color: white;
+    width: 95%
 }
 
 .word-area1 {
     @extend .lesson;
-    font-size: small;
-    width: 80%;
+    font-size: medium;
+    width: 95%;
     justify-content: center;
 }
 
