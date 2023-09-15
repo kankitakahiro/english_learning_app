@@ -110,7 +110,7 @@ export default function Tlesson() {
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
                     <img className='answer-img' src={image} alt='answer-img' /><br />
-                    <p className='word-area1'>{answer}</p>
+                    <p className='answer-word-area'>{answer}</p>
                 </div>
             </Modal>
 
@@ -123,7 +123,7 @@ export default function Tlesson() {
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
                     <img className='answer-img' src={image} alt='answer-img' /><br />
-                    <p className='word-area1'>{answer}</p>
+                    <p className='answer-word-area'>{answer}</p>
                 </div>
             </Modal>
         </>

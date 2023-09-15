@@ -62,8 +62,9 @@
 .answer-word-area {
     @extend .word-area1;
     height: auto;
-    margin-bottom: 2rem;
-    margin-top: 2rem;
+    margin: auto 1rem;
+    background-color: white;
+    border: 1px solid $primary;
 }
 
 .answer-img-table {

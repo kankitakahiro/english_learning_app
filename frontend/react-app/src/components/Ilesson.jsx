@@ -114,7 +114,7 @@ export default function Ilesson() {
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
                     <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
-                    <p className='word-area1'>{word}</p>
+                    <p className='answer-word-area'>{word}</p>
                 </div>
             </Modal>
 
@@ -127,7 +127,7 @@ export default function Ilesson() {
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
                     <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
-                    <p className='word-area1'>{word}</p>
+                    <p className='answer-word-area'>{word}</p>
                 </div>
             </Modal>
         </>

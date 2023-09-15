@@ -38,3 +38,7 @@
     border-radius: $radius;
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+
+#signedModal {
+    border: '1px solid black !important',
+}
