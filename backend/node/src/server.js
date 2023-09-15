@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const PORT = 8080;
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 const mysql = require('mysql');
@@ -97,7 +97,53 @@ function intRandom(min, max){
     return Math.floor( Math.random() * (max - min + 1)) + min;
 }
 
-// テスト用のエンドポイント
+app.get('/development-mysl/init-table', async(req, res) => {
+    const table_name = req.query.table_name;
+
+    if (table_name === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    if (table_name !== 'lesson_data' || table_name !== 'user_data' || table_name !== 'user_lesson') {
+        res.status(400).send('Bad Request');
+        return;
+    }
+
+    // pool.query('DROP TABLE lesson_data', (err, results) => {
+    //     if (err) throw err;
+    //     console.log(results);
+    // });
+
+    const query = `SHOW TABLES LIKE ?`;
+    let ans;
+    pool.query(query, [table_name], (err, results) => {
+        if (err) throw err;
+        
+        ans = results;
+        if (ans.length === 0) {
+            console.error('テーブルが存在しません。テーブルを作成します。');
+            // primary key(int) | word_name(str) | level(str) | type(str) | sentence(str) | image_id(int) |
+            const query = `CREATE TABLE ${table_name} (
+                id INT NOT NULL AUTO_INCREMENT,
+                word_name VARCHAR(255) NOT NULL,
+                level VARCHAR(255) NOT NULL,
+                type VARCHAR(255) NOT NULL,
+                sentence VARCHAR(255) NOT NULL,
+                image_id INT NOT NULL,
+                PRIMARY KEY (id)
+            )`;
+            pool.query(query, (err, results) => {
+                if (err) throw err;
+                console.log(results);
+            });
+        } else {
+            console.error('テーブルが存在します。');
+            return;   
+        }
+    });    
+});
+
 app.get('/lesson-test', (req, res) => {
     // req.queryでクエリパラメータにlessonと単語番号が入っている
     // 例: http://localhost:8080/lesson-test?lesson=1&number=1
@@ -108,15 +154,24 @@ app.get('/lesson-test', (req, res) => {
         res.status(400).send('Bad Request');
         return;
     }
+});
 
+// テスト用のエンドポイント
+app.get('/lesson-test', (req, res) => {
+    // req.queryでクエリパラメータにlessonと単語番号が入っている
+    // 例: http://localhost:8080/lesson-test?lesson=1&number=1
+    const lesson = req.query.lesson;
+    const number = req.query.number;
+    if (lesson === undefined || number === undefined) {
+        res.status(400).send('Bad Request');
+        return;
+    }
     fs.readdir('./b64_data', (err, files) => {
         if (err) {
             console.log(err);
             res.status(500).send('Internal Server Error 1');
             return;
         }
-
-
         let image_data;
         // .txt ファイルだけをフィルタリング
         // const textFiles = files.filter(file => path.extname(file) === '.text');
@@ -176,118 +231,6 @@ app.get('/lesson-test', (req, res) => {
                 console.error('データベース操作エラー:', err);
                 res.status(500).send('データベース操作エラー');
             }
-        
-    });
-});
-
-
-// アプリ開始時に確認する.
-const readline = require('readline');
-const { create } = require('domain');
-
-app.get('/addsql', async (req, res) => {
-    fs.readdir('./text', async (err, files) => {
-        if (err) {
-        console.log(err);
-        res.status(500).send('Internal Server Error 1');
-        return;
-        }
-        
-        // .txt ファイルだけをフィルタリング
-        const textFiles = files.filter(file => path.extname(file) === '.text');
-    
-        for (const elem of textFiles) {
-        let lesson = 'error';
-        if (/.*B1.*/.test(elem)) {
-            lesson = 1;
-        } else if (/.*B2.*/.test(elem)) {
-            lesson = 2;
-        } else if (/.*C1.*/.test(elem)) {
-            lesson = 3;
-        } else if (/.*C2.*/.test(elem)) {
-            lesson = 4;
-        }
-        console.log(lesson);
-        const stream = fs.createReadStream('./text/' + elem, 'utf8');
-        const namelist = {};
-    
-        const rl = readline.createInterface({
-            input: stream,
-            output: process.stdout,
-            terminal: false
-        });
-    
-        rl.on('line', async (data) => {
-            const processedData = data.replace(/\n/g, '').replace(/ /g, '_').replace(/\./g, '').replace(/'/g, '');
-            // ここで非同期処理を行いたい場合、awaitを使用してください。
-            // 例: const result = await someAsyncFunction(processedData);
-            namelist[data] = processedData;
-        });
-    
-        await new Promise((resolve) => {
-            rl.on('close', async () => {
-                    // ファイルの読み込みが完了した後に行う処理をここに記述
-                    // console.log(namelist); // namelistに処理結果が格納されていると仮定しています
-
-                try {
-                    const files = await fs.promises.readdir('./b64_data'); // 非同期でディレクトリを読み込み
-                    // .txt ファイルだけをフィルタリング
-                    const textFiles = files.filter(file => path.extname(file) === '.text');
-                    
-                    // ここで textFiles の処理を続けできます
-                    // 例: textFiles.forEach(...)
-                    // console.log(textFiles)
-                    Object.keys(namelist).forEach(function (word) {
-                        textFiles.forEach(function (value) {
-                            if (!value.indexOf(namelist[word])) {                  
-                                // 文章と絵が入っているファイルを結びつけることができた。
-                                
-                                /**
-                                *  table
-                                * ___________________________
-                                * id | word | image | lesson |
-                                * ---------------------------
-                                */
-                                // console.log(word,lesson,"data:image/png;base64," + image_data);
-                                
-                                let flag;
-                                try {
-                                    dotenv.config();
-                                    // クエリを実行
-                                    pool.query("SELECT * FROM question where lesson = ?", [lesson], (err, database) => {
-                                        database.forEach(function(each_data){
-                                            if (each_data.image === value){
-                                                flag = 'dup'
-                                            }
-                                        });
-                                        if (!(flag === 'dup')){
-                                            pool.query('INSERT IGNORE INTO question(word,image,lesson) VALUES(?,?,?)',[word,value,lesson],function(error, response) {
-                                                if(error) throw error;
-                                                    console.log(word,value,lesson);
-                                            });
-                                        }
-                                    });
-                                } catch (err) {
-                                    console.error('データベース操作エラー:', err);
-                                    res.status(500).send('データベース操作エラー');
-                                }
-  
-                            }
-                        });
-                    });
-                } catch (err) {
-                    console.error(err);
-                    res.status(500).send('Internal Server Error 2');
-                }
-
-        
-    
-            resolve(); // Promiseを解決して次のファイルの処理を開始
-            });
-        });
-        }
-        
-        console.log('All files processed.');
     });
 });
 
@@ -296,7 +239,7 @@ app.get('/mysql',  (req, res) => {
     try {
         dotenv.config();
             // 例: クエリの実行
-        pool.query('SELECT * FROM question', (err, results) => {
+        pool.query('SELECT count(*) FROM lesson_data', (err, results) => {
             if (err) throw err;
             console.log(results);
         });
@@ -306,6 +249,40 @@ app.get('/mysql',  (req, res) => {
         res.status(500).send('データベース操作エラー');
     }
 });
+
+// ********************************** ここまで *******************************************************
+
+/**
+ * table lesson_data -> 単語のデータ
+ * ____________________________________________________
+ * id | word_name | level | type | sentence | image_id |
+ * ____________________________________________________
+ * is : primary key
+ * word : 単語の名前
+ * level : 単語のレベル(B1,B2,C1,C2,daily, countable-uncountable)
+ * type : 単語のタイプ(noun, verb, mix, other)
+ * sentence : 単語の例文
+ * image_id : 単語の番号(image1 〜 max(image4))
+ * 
+ * 
+ * tabele user_data -> ユーザーのデータ
+ * __________________________
+ * id | user_name | user_id |
+ * __________________________
+ * id : primary key
+ * user_name : ユーザーの名前
+ * user_id : ユーザーのID(firebaseのUID)
+ * 
+ * 
+ * table user_lesson　-> ユーザーの学習データ
+ * _____________________________________
+ * id | word_name | user_id | image_id |
+ * _____________________________________
+ * id : primary key
+ * word_name : 単語の名前
+ * user_id : ユーザーのID(firebaseのUID)
+ * image_id : 単語の番号(image1 〜 max(image4))
+ */
 
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
