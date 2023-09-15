@@ -154,11 +154,12 @@ ul {
 
 .select-answer-area {
   background-color: white;
+  width: 95%;
 }
 
 .word-area1, .answer-word-area, .word-area2 {
-  font-size: small;
-  width: 80%;
+  font-size: medium;
+  width: 95%;
   justify-content: center;
 }
 
@@ -272,4 +273,5 @@ ul {
   height: 100%;
   width: auto;
   margin-left: 0;
+  border: 0px;
 }

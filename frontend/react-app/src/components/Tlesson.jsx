@@ -44,6 +44,7 @@ export default function Tlesson() {
             });
             navigate(`/tlesson/${id}/result/${score}`);
         } else {
+            console.log(REACT_APP_DEV_URL);
             fetch(`${REACT_APP_DEV_URL}/tlesson-test?lesson=${id}&number=${number}`)
                 // fetch(`/ lesson - test ? lesson = ${ id } & number=${ number }`)
                 .then(response => response.json())
