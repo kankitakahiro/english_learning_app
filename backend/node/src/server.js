@@ -262,7 +262,6 @@ app.post('/history', async (req, res) => {
         return;
     }
 
-
     const level = lessonToLevel[lesson][0];
     const type = lessonToLevel[lesson][1];
 
@@ -299,7 +298,6 @@ app.post('/history', async (req, res) => {
             question: []
         };
     }
-
 });
 
 /** min以上max以下の整数値の乱数を返す */

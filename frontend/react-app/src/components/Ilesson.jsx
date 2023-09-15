@@ -56,7 +56,6 @@ export default function Ilesson() {
                     },
                     body: JSON.stringify(data)
                 });
-                navigate(`/ilsson/${id}/result/${score}`);
             } catch (error) {
                 console.error('データの取得エラー:', error);
             }
@@ -69,11 +68,10 @@ export default function Ilesson() {
                 }
                 else {
                     const jsonData = await response.json();
-                    setAnswer(jsonData.answer);
+                    setAnswer(jsonData.ans);
                     setImages(jsonData.images);
                     setWord(jsonData.word);
                     setHistory(...history, jsonData.history);
-                    navigate(`/ilesson/${id}/${number}`);
                 }
             } catch (error) {
                 console.error('データの取得エラー:', error);
@@ -81,8 +79,10 @@ export default function Ilesson() {
         };
         if (number === 11) {
             fetchPost();
+            navigate(`/ilesson/${id}/result/${score}`);
         } else {
             fetchGet();
+            navigate(`/ilesson/${id}/${number}`);
         }
     }, [number]);
 
@@ -91,7 +91,7 @@ export default function Ilesson() {
     function handleAnswer(word) {
         if (word == answer) {
             console.log("word:", word);
-            console.log("answer",answer);
+            console.log("answer", answer);
             setScore(score + 1);
             setShowCorrectModal(true);
         } else {
