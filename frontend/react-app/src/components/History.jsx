@@ -110,6 +110,9 @@ export default function History() {
                 style={customStyles}
             >
             </Modal> */}
+            <div className='footer-s'>
+                <Link to="/" className='btn-p'>HOME</Link>
+            </div>
 
         </>
     );
