@@ -6,18 +6,40 @@ const fs = require('fs');
 const admin = require('firebase-admin');
 const dotenv = require('dotenv');
 const mysql = require('mysql');
+
+// 本番環境の時はDockerfileでNODE_ENV=productionを指定してください
+// ここで環境変数を指定します
+let firebase_private_key;
+let mysql_conf;
 if (process.env.NODE_ENV !== "production") { // production is 本番環境
-    dotenv.config();
+    dotenv.config(); // .envファイルを読み込む
+    firebase_private_key = process.env.private_key; // .envファイルからfirebaseの秘密鍵を取得
+    mysql_conf = {
+        connectionLimit: process.env.CONNECTION_LIMIT,
+        host: process.env.INSTANCE_HOST, // Cloud SQL Proxy コンテナのサービス名
+        port: process.env.DB_PORT, // Cloud SQL Proxy がリッスンしているポート
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
+        database: process.env.DB_NAME
+    };
     console.log("development");
 } else {
+    firebase_private_key = process.env.private_key.replace(/\\n/g, '\n'); // 本番環境では改行コードが\nになっているので、それを置換
+    mysql_conf = {
+        user: process.env.DB_USER, // e.g. 'my-db-user'
+        password: process.env.DB_PASS, // e.g. 'my-db-password'
+        database: process.env.DB_NAME, // e.g. 'my-database'
+        socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
+    };
     console.log("production");
 }
 
+// firebaseの設定を環境変数から取得
 const serviceAccount = {
     "type": process.env.apiKey,
     "project_id": process.env.project_id,
     "private_key_id": process.env.private_key_id,
-    "private_key": process.env.private_key.replace(/\\n/g, '\n'),
+    "private_key": firebase_private_key,
     "client_email": process.env.client_email,
     "client_id": process.env.client_id,
     "auth_uri": process.env.auth_uri,
@@ -26,55 +48,39 @@ const serviceAccount = {
     "client_x509_cert_url": process.env.client_x509_cert_url,
     "universe_domain": process.env.universe_domain
 }
-
-app.use(express.static(path.join(__dirname, 'build')));
-
+// firebaseの初期化
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
 });
 
+// mysqlの初期化
+const pool = mysql.createPool(mysql_conf);
+
+// reactのビルドファイルを読み込む
+app.use(express.static(path.join(__dirname, 'build')));
+
+// jsonをパースする
 app.use(express.json());
 
-app.get('/test', (req, res) => {
-    res.send('Hello World!');
+// root
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-// function mySql
-let pool;
-if (process.env.NODE_ENV !== "production") { // production is 本番環境
-    dotenv.config();
-    pool = mysql.createPool({
-        connectionLimit: 10,
-        host: 'db', // Cloud SQL Proxy コンテナのサービス名
-        port: 3306, // Cloud SQL Proxy がリッスンしているポート
-        user: process.env.DB_USER,
-        password: process.env.DB_PASS,
-        database: process.env.DB_NAME
-    });
-}else{
-    pool = mysql.createPool({
-        user: process.env.DB_USER, // e.g. 'my-db-user'
-        password: process.env.DB_PASS, // e.g. 'my-db-password'
-        database: process.env.DB_NAME, // e.g. 'my-database'
-        socketPath: process.env.INSTANCE_UNIX_SOCKET, // e.g. '/cloudsql/project:region:instance'
-    });
-}
-
-/** min以上max以下の整数値の乱数を返す */
-function intRandom(min, max){
-    return Math.floor( Math.random() * (max - min + 1)) + min;
-}
-
-
+// ログイン認証
+// ユーザーの新規登録はfirebaseに直接アクセスして行う
 app.post('/verifyToken', async (req, res) => {
     const idToken = req.body.token;
     // console.log(idToken);
     try {
         const decodedToken = await admin.auth().verifyIdToken(idToken);
         // decodedTokenにはUIDとその他のクレームが含まれます。
-        console.log(decodedToken.uid); // これがユーザーのUIDです。
-        res.header('Access-Control-Allow-Origin', '*');
+        console.log(decodedToken.uid, 'is log in'); // これがユーザーのUIDです。
+
+        res.header('Access-Control-Allow-Origin', '*'); // for development
+
         res.json(decodedToken);
+
         console.log("ok");
 
         // Mysqlの処理を書く
@@ -84,17 +90,12 @@ app.post('/verifyToken', async (req, res) => {
     }
 });
 
+// ********************************** ここから *******************************************************
 
-/**
- *  table
- * ___________________________
- * id | word | image | lesson |
- * ---------------------------
- */
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
+/** min以上max以下の整数値の乱数を返す */
+function intRandom(min, max){
+    return Math.floor( Math.random() * (max - min + 1)) + min;
+}
 
 // テスト用のエンドポイント
 app.get('/lesson-test', (req, res) => {
@@ -108,24 +109,6 @@ app.get('/lesson-test', (req, res) => {
         return;
     }
 
-    // *****************
-
-    // 現在のディレクトリの位置をconsole.logで確認
-    // console.log(__dirname);
-    // fs.readdir('./', (err, files) => {
-    //     if (err) {
-    //         console.log(err);
-    //         res.status(500).send('Internal Server Error 10');
-    //         return;
-    //     }
-    //     console.log('-----------');
-    //     console.log(files);
-    //     console.log('-----------');
-    // });
-
-
-    // const data_path = "/Users/yamamotoyuta/Desktop/Hack U/code/english_learning_app/backend/node/b64_data";
-
     fs.readdir('./b64_data', (err, files) => {
         if (err) {
             console.log(err);
@@ -137,9 +120,6 @@ app.get('/lesson-test', (req, res) => {
         let image_data;
         // .txt ファイルだけをフィルタリング
         // const textFiles = files.filter(file => path.extname(file) === '.text');
-
-        
-
         try {
                 
                 // クエリを実行
@@ -203,6 +183,7 @@ app.get('/lesson-test', (req, res) => {
 
 // アプリ開始時に確認する.
 const readline = require('readline');
+const { create } = require('domain');
 
 app.get('/addsql', async (req, res) => {
     fs.readdir('./text', async (err, files) => {
@@ -310,8 +291,6 @@ app.get('/addsql', async (req, res) => {
     });
 });
 
-
-
 // ルートハンドラーの定義
 app.get('/mysql',  (req, res) => {
     try {
@@ -331,4 +310,3 @@ app.get('/mysql',  (req, res) => {
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
-

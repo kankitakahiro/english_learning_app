@@ -24,20 +24,15 @@ export default function Ilesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        if (number === 11) {
-            navigate(`/ilesson/${id}/result/${score}`);
-        } else {
-            fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/lesson-test?lesson=${id}&number=1`)
-                .then(response => response.json())
-                .then(data => {
-                    setAnswer(data.answer);
-                    setImages(data.images);
-                    setWord(data.word);
-                    navigate(`/ilesson/${id}/${number}`);
-                })
-        }
-    }, [number]);
+        fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=1`)
+            // fetch(`/lesson-test?lesson=${id}&number=1`)
+            .then(response => response.json())
+            .then(data => {
+                setAnswer(data.answer);
+                setImages(data.images);
+                setWord(data.word);
+            });
+    }, [id]);
 
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
