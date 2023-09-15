@@ -28,23 +28,28 @@ export default function History() {
             }
         };
         loadImage();
+        fetchGet();
     }, []);
-    useEffect(() => {
-        const retrievedToken = sessionStorage.getItem("authToken");
-        const response = fetch(`${REACT_APP_DEV_URL}/history`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': retrievedToken
-            },
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
+
+    const fetchGet = async () => {
+        try {
+            const response = await fetch(`${REACT_APP_DEV_URL}/history`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error('データの取得に失敗しました。');
+            }
+            else {
+                const jsonData = await response.json();
+                setHistory(jsonData.history)
+            }
+        } catch (error) {
+            console.error('データの取得エラー:', error);
         }
-        else {
-            setHistory(response.json)
-        }
-    }, []);
+    };
     const historyList = [
         {
             title: 'LESOON1', questions: [

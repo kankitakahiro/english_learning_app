@@ -252,52 +252,101 @@ app.post('/lesson-end', async (req, res) => {
  * 
  */
 
-app.post('/history', async (req, res) => {
-    const user_id = req.status;
-    const lesson = req.query.lesson;
-    const history = req.body.history;
+app.get('/history', async (req, res) => {
+    // const user_id = req.status;
+    // const lesson = req.query.lesson;
+    // const history = req.body.history;
 
-    if (lesson === undefined || history === undefined) {
-        res.status(400).send('Bad Request');
-        return;
-    }
+    // if (lesson === undefined || history === undefined) {
+    //     res.status(400).send('Bad Request');
+    //     return;
+    // }
 
-    const level = lessonToLevel[lesson][0];
-    const type = lessonToLevel[lesson][1];
+    // const level = lessonToLevel[lesson][0];
+    // const type = lessonToLevel[lesson][1];
 
-    if (user_id === false) {
-        res.status(401).send('Token is not valid');
-        return;
-    }
+    // if (user_id === false) {
+    //     res.status(401).send('Token is not valid');
+    //     return;
+    // }
     const execQuery = `
-        SELECT word_name, sentence
-        FROM lesson_data
-        WHERE level = ? AND type = ?
+        SELECT id, word_name, level, type, sentence, image_id
+        FROM (
+            SELECT id, word_name, level, type, sentence, image_id,
+                ROW_NUMBER() OVER(PARTITION BY word_name ORDER BY RAND()) as row_num
+            FROM lesson_data
+        ) AS subquery
+        WHERE row_num = 1
         ORDER BY word_name;
     `;
     let result;
     try {
-        result = await pool.query(execQuery, [level, type]);
+        result = await pool.query(execQuery);
     } catch (err) { 
         console.error('データベース操作エラー:', err);
         res.status(500).send('データベース操作エラー');
     }
-    let history_list = [0]* 10;
-    for (let i = 0; i < result[0].length; i++) {
-        const word = result[0][i]['word_name'];
-        const b64_data_path = path.join('./new_data_set/data/', result[0][i]['level'] + '_' + result[0][i]['type'], word, 'image' + history[i] + '.text');
-        let text_data;
+
+    // console.log(result.length);
+    // return;
+    let history_list = [];
+    let tmp = 0;
+    for (let i = 0; i < 5; i++) {
+        history_list.push({
+            "title": "Lesson" + (i + 1),
+            "questions": []
+        });
         try {
-            text_data = await fs.readFile(b64_data_path, 'utf8');
+            for (let j = 0; j < 10; j++) {
+                let b64_data_path;
+                let word;
+                try {
+                    word = result[0][tmp]['word_name'];
+                    // console.log(word);
+                    // return;
+                    b64_data_path = path.join('./new_data_set/data/', result[0][tmp]['level'] + '_' + result[0][tmp]['type'], word, 'image' + result[0][tmp]['image_id'] + '.text');
+                    // console.log("---------");
+                    let text_data = await fs.readFile(b64_data_path, 'utf8');
+                    // console.log(text_data);
+                    // console.log(tmp);
+                    tmp++;   
+                    
+                        
+                    if (j == 0) {
+                        history_list[i].questions = [{ word: word, image: "data:image/png;base64," + text_data }];
+                    } else {
+                        history_list[i].questions.push({ word: word, image: "data:image/png;base64," + text_data });
+                    }
+                    // console.log("_______________");
+                    // console.log("_______________");
+                    // console.log("_______________");
+                    // console.log(history_list);
+                    // console.log("_______________");
+                   
+                    console.log(history_list[i]);
+
+                    
+                    
+
+                } catch (err) {
+                    console.error('ファイル読み込みエラー:', err);
+                    // break
+                    // res.status(500).send('ファイル読み込みエラー');
+                }
+                // console.log(b64_data_path);    
+            }
         } catch (err) {
+            // break
             console.error('ファイル読み込みエラー:', err);
-            res.status(500).send('ファイル読み込みエラー');
+            // break
+            // res.status(500).send('ファイル読み込みエラー');
         }
-        history_list[i] = {
-            title: "Lessson"+i+1,
-            question: []
-        };
     }
+    
+    // console.log(history_list);
+    res.json({
+        history: history_list
+    });
 });
 
 /** min以上max以下の整数値の乱数を返す */
