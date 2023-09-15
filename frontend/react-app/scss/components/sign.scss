@@ -1,18 +1,18 @@
-.login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 90%;
+.sign {
+    // display: flex;
+    // justify-content: center;
+    text-align: center;
 }
-
 
 .login-form {
     display: inline-block;
-    padding: 2rem;
+    padding: 1rem;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 1rem 0;
+    width: 90%;
 }
 
 .form-item {
@@ -28,7 +28,7 @@
     font-size: 1rem;
     font-weight: 400;
     line-height: 1.5;
-    color: #212529;
+    color: $primary;
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;

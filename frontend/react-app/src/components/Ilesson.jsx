@@ -3,6 +3,8 @@ import { BrowserRouter as Router, Route, Routes, Link, useParams, useNavigate } 
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { customStyles } from './Modal';
+import { REACT_APP_DEV_URL } from '..';
+import Header from './Header';
 
 /*
 Playing Page Component (pass:/lesson/:lesson_id/:number) 
@@ -13,6 +15,7 @@ export default function Ilesson() {
     const [word, setWord] = useState('');
     const [answer, setAnswer] = useState('');
     const [images, setImages] = useState([]);
+    const [history, setHistory] = useState([]);
     const [number, setNumber] = useState(1);
     const [score, setScore] = useState(0);
     const navigate = useNavigate();
@@ -24,15 +27,34 @@ export default function Ilesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=1`)
-            // fetch(`/lesson-test?lesson=${id}&number=1`)
-            .then(response => response.json())
-            .then(data => {
-                setAnswer(data.answer);
-                setImages(data.images);
-                setWord(data.word);
+        if (number === 11) {
+            const retrievedToken = sessionStorage.getItem("authToken");
+            fetch(`${REACT_APP_DEV_URL}/result`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': retrievedToken
+                },
+                body: {
+                    id: id,
+                    history: history
+                },
             });
-    }, [id]);
+            navigate(`/ilesson/${id}/result/${score}`);
+        } else {
+            fetch(`${REACT_APP_DEV_URL}/ilesson-test?lesson=${id}&number=${number}`)
+                // fetch(`/lesson-test?lesson=${id}&number=1`)
+                .then(response => response.json())
+                .then(data => {
+                    setAnswer(data.answer);
+                    setImages(data.images);
+                    setWord(data.word);
+                    setHistory(...history, data.history)
+                    navigate(`/ilesson/${id}/${number}`);
+                })
+        }
+    }, [number]);
+
 
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
@@ -56,7 +78,7 @@ export default function Ilesson() {
 
     return (
         <>
-            <header></header>
+            <Header />
             <main>
                 <div className='ilesson-header'>
                     <h1>LESSON{id}</h1>

@@ -36,22 +36,20 @@ export default function Home() {
         <>
             <main>
                 <div className="logo-area">
+                    <img src="logo_sample.png" alt="logo" />
                 </div>
                 <div className="select-lesson-area">
-                    <span>image - text..</span>
+                    <span>image -> text..</span>
                     <ul className='lessons'>{tlessons}</ul>
                 </div>
                 <div className="select-lesson-area">
-                    <span>text - image..</span>
+                    <span>text -> image..</span>
                     <ul className='lessons'>{ilessons}</ul>
                 </div>
                 <div className='footer-d'>
                     <div className='low-buttons'>
-                        <Link to="/login" className='btn-p'>Login</Link>
+                        <Link to="/sign" className='btn-p'>Login</Link>
                         <Link to="/history" className='btn-s'>History</Link>
-                        {/* <Link to="/lesson/1/result" className='btn-p'>Settings</Link>
-                        <Link to="/" className='btn-p'>Guide</Link>
-                        <Link to="/login" className='btn-p'>ログイン</Link> */}
                     </div>
                 </div>
             </main>
