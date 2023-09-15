@@ -56,7 +56,6 @@ export default function Ilesson() {
                     },
                     body: JSON.stringify(data)
                 });
-                navigate(`/ilesson/${id}/result/${score}`);
             } catch (error) {
                 console.error('データの取得エラー:', error);
             }
@@ -73,7 +72,6 @@ export default function Ilesson() {
                     setImages(jsonData.images);
                     setWord(jsonData.word);
                     setHistory(...history, jsonData.history);
-                    navigate(`/ilesson/${id}/${number}`);
                 }
             } catch (error) {
                 console.error('データの取得エラー:', error);
@@ -81,8 +79,10 @@ export default function Ilesson() {
         };
         if (number === 11) {
             fetchPost();
+            navigate(`/ilesson/${id}/result/${score}`);
         } else {
             fetchGet();
+            navigate(`/ilesson/${id}/${number}`);
         }
     }, [number]);
 
