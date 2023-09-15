@@ -54,6 +54,7 @@ export default function Ilesson() {
         }
     }, [number]);
 
+
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
         if (word === answer) {

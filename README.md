@@ -30,3 +30,17 @@ docker exec -it node /bin/bash  # node コンテナ
 docker exec -it react /bin/bash # react コンテナ
 docker exec -it db /bin/bash    # db コンテナ
 ```
+
+## 目標
+- データベース (kanki)
+- ログイン (引き継ぎ) -> 名前, 進捗とか表示させる (kido)
+- ユーザーのオリジナルの画像 upload (front:kido, back:yamamoto)
+- エラー直す, リファクタリング -> 問題文 list(yamamoto)
+- 資料の修正, 練習 (金曜日)
+
+---
+
+金曜日に時間があれば
+- 画像の修正
+- 音声 ??
+

@@ -1,0 +1,1 @@
+// ここにmysqlのmoduleを作成する
