@@ -13,7 +13,7 @@ export default function Ilesson() {
 
     const { id } = useParams();
     const [word, setWord] = useState('');
-    const [answer, setAnswer] = useState('');
+    const [answer, setAnswer] = useState(0);
     const [images, setImages] = useState([]);
     const [history, setHistory] = useState([]);
     const [number, setNumber] = useState(1);
@@ -86,9 +86,12 @@ export default function Ilesson() {
         }
     }, [number]);
 
+
     // Called when User answer question after that Show modal
     function handleAnswer(word) {
-        if (word === answer) {
+        if (word == answer) {
+            console.log("word:", word);
+            console.log("answer",answer);
             setScore(score + 1);
             setShowCorrectModal(true);
         } else {
