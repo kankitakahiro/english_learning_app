@@ -13,7 +13,7 @@ export default function Ilesson() {
 
     const { id } = useParams();
     const [word, setWord] = useState('');
-    let [answer, setAnswer] = useState(0);
+    const [answer, setAnswer] = useState(0);
     const [images, setImages] = useState([]);
     const [history, setHistory] = useState([]);
     const [number, setNumber] = useState(1);
@@ -57,6 +57,7 @@ export default function Ilesson() {
                 });
         }
     }, [number]);
+    // }, [number, id, navigate, score]);
 
 
     // Called when User answer question after that Show modal
