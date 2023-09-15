@@ -28,7 +28,7 @@ export default function Result() {
                 <div className='footer-d'>
                     <div className='low-buttons'>
                         <Link to="/" className='btn-p'>HOME</Link>
-                        <Link to={`/lesson/${id}/1`} className='btn-p'>Retry</Link>
+                        <Link to={`/tlesson/${id}/1`} className='btn-p'>Retry</Link>
                     </div>
                 </div>
             </main>
