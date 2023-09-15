@@ -2,4 +2,11 @@
     height: 100%;
     width: auto;
     margin-left: 0;
+    border: 0px;
+}
+
+header {
+    border-bottom: 1px solid $primary;
+    height: 10%;
+    width: 100%;
 }

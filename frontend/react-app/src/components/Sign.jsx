@@ -78,23 +78,25 @@ export default function Sign() {
                     <form onSubmit={handleSubmitSingIn} className='login-form'>
                         <p>Sing in</p>
                         <div className='form-item'>
-                            <label htmlFor="email">Email</label><br />
+                            <label htmlFor="sign-in-email">Email</label><br />
                             <input
                                 value={email}
                                 onChange={e => setEmail(e.target.value)}
                                 type="email"
                                 placeholder="Email"
                                 className='form-c'
+                                name='sign-in-email'
                             />
                         </div>
                         <div className='form-item'>
-                            <label htmlFor="password">Password</label><br />
+                            <label htmlFor="sign-in-password">Password</label><br />
                             <input
                                 value={password}
                                 onChange={e => setPassword(e.target.value)}
                                 type="password"
                                 placeholder="Password"
                                 className='form-c'
+                                name='sign-in-password'
                             />
                         </div>
                         <button type="submit" className='btn-p'>Login</button>
@@ -133,6 +135,7 @@ export default function Sign() {
             </div>
 
             <Modal
+                id='signedModal'
                 isOpen={showModal}
                 contentLabel="singedModal"
                 style={customStyles}

@@ -42,12 +42,15 @@
 .select-answer-area {
     @extend .select-lesson-area;
     background-color: white;
+    width: 95%;
 }
 
 .word-area1 {
     @extend .lesson;
-    font-size: small;
-    width: 80%;
+    font-size: medium;
+    width: 95%;
+    padding: 8px;
+    height: 60px;
     justify-content: center;
 }
 
@@ -58,8 +61,10 @@
 
 .answer-word-area {
     @extend .word-area1;
-    margin-bottom: 2rem;
-    margin-top: 4rem;
+    height: auto;
+    margin: auto 1rem;
+    background-color: white;
+    border: 1px solid $primary;
 }
 
 .answer-img-table {
@@ -77,7 +82,7 @@
 }
 
 #correctModal {
-    border: 1rem solid rgb(197, 239, 155);
+    border: 1rem solid rgb(197, 239, 155) !important;
 
     h2 {
         color: chartreuse;
@@ -86,7 +91,7 @@
 }
 
 #wrongModal {
-    border: 1rem solid rgb(245, 141, 139);
+    border: 1rem solid rgb(245, 141, 139) !important;
 
     h2 {
         color: rgb(216, 32, 28);

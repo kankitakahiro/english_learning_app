@@ -51,7 +51,10 @@ export default function Ilesson() {
                     setWord(data.word);
                     setHistory([...history, data.history]);
                     navigate(`/ilesson/${id}/${number}`);
-                })
+                }).catch((error) => {
+                    console.log("エラ----------------");
+                    console.error('Error:', error);
+                });
         }
     }, [number, id, navigate, score]);
 
@@ -116,7 +119,7 @@ export default function Ilesson() {
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
                     <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
-                    <p className='word-area1'>{word}</p>
+                    <p className='answer-word-area'>{word}</p>
                 </div>
             </Modal>
 
@@ -129,7 +132,7 @@ export default function Ilesson() {
                 <div onClick={() => handleNext()} className='WrongModal'>
                     <h2>Wrong</h2>
                     <img className='answer-img' src={images[answer]} alt='answer-img' /><br />
-                    <p className='word-area1'>{word}</p>
+                    <p className='answer-word-area'>{word}</p>
                 </div>
             </Modal>
         </>

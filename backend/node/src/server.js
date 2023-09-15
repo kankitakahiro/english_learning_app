@@ -73,17 +73,17 @@ app.get('/', (req, res) => {
 });
 
 // ログインのトークンを調べる
-// app.use( async (req, res, next) => {
-//     try {
-//         const idToken = req.headers.authorization;
-//         const decodedToken = await admin.auth().verifyIdToken(idToken);
-//         req.status = decodedToken.uid;
-//     } catch (error) {
-//         console.log(error);
-//         req.status = false;
-//     }
-//     next();
-// });
+app.use( async (req, res, next) => {
+    try {
+        const idToken = req.headers.authorization;
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        req.status = decodedToken.uid;
+    } catch (error) {
+        console.log(error);
+        req.status = false;
+    }
+    next();
+});
 
 // ログイン認証
 // ユーザーの新規登録はfirebaseに直接アクセスして行う
@@ -320,6 +320,8 @@ app.get('/ilesson-test', async (req, res) => {
     const lesson = req.query.lesson;
     const number = parseInt(req.query.number);
 
+    console.log(lesson);
+
     const level = lessonToLevel[lesson][0];
     const type = lessonToLevel[lesson][1];
 
@@ -353,8 +355,8 @@ app.get('/ilesson-test', async (req, res) => {
         res.status(500).send('データベース操作エラー');
     }
 
-    console.log(result);
-    console.log(result[0].length);
+    // console.log(result);
+    // console.log(result[0].length);
     
     const sentence = result[0][number-1]['sentence'];
     const word = result[0][number-1]['word_name'];
@@ -409,10 +411,16 @@ app.get('/ilesson-test', async (req, res) => {
         }
         item_list[i] = item_list[i].slice(1);
     }
-    console.log(ans);
-    console.log(sentence);
-    console.log(item_list);
+    // console.log(ans);
+    // console.log(sentence);
+    // console.log(item_list);
     res.header('Access-Control-Allow-Origin', '*');
+    console.log("_______________");
+    // console.log(ansWords);
+    // console.log(item_list.length);
+    console.log(ans);
+    console.log("_______________");
+    // console.log(item_list[0]);
     res.json({
         "ans": ans,
         "images":item_list,
