@@ -24,12 +24,6 @@ img, .answer-img {
   border-radius: 0.375rem;
 }
 
-header {
-  border: 1px solid;
-  height: 10%;
-  width: 100%;
-}
-
 .footer-d, .footer-s {
   position: absolute;
   bottom: 4rem;
@@ -172,8 +166,9 @@ ul {
 
 .answer-word-area {
   height: auto;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
+  margin: auto 1rem;
+  background-color: white;
+  border: 1px solid #8AB5DE;
 }
 
 .answer-img-table {
@@ -273,9 +268,19 @@ ul {
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+#signedModal {
+  border: "1px solid black !important";
+}
+
 .header-img {
   height: 100%;
   width: auto;
   margin-left: 0;
   border: 0px;
+}
+
+header {
+  border-bottom: 1px solid #8AB5DE;
+  height: 10%;
+  width: 100%;
 }

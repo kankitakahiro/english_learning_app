@@ -135,6 +135,7 @@ export default function Sign() {
             </div>
 
             <Modal
+                id='signedModal'
                 isOpen={showModal}
                 contentLabel="singedModal"
                 style={customStyles}
