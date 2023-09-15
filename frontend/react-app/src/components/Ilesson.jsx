@@ -49,11 +49,11 @@ export default function Ilesson() {
                     setAnswer(data.answer);
                     setImages(data.images);
                     setWord(data.word);
-                    setHistory(...history, data.history)
+                    setHistory(...history, data.history);
                     navigate(`/ilesson/${id}/${number}`);
                 })
         }
-    }, [number]);
+    }, [history, id, navigate, number, score]);
 
 
     // Called when User answer question after that Show modal
