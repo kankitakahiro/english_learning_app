@@ -252,7 +252,7 @@ app.post('/lesson-end', async (req, res) => {
  * 
  */
 
-app.get('/all-words', async (req, res) => {
+app.get('/history', async (req, res) => {
     // const user_id = req.status;
     // const lesson = req.query.lesson;
     // const history = req.body.history;

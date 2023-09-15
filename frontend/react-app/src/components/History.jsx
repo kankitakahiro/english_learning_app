@@ -38,13 +38,15 @@ export default function History() {
                 'Authorization': retrievedToken
             },
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        else {
-            const jsonData = response.json();
-            setHistory(jsonData.history)
-        }
+        // if (!response.ok) {
+        //     throw new Error('Network response was not ok');
+        // }
+        // else {
+        //     const jsonData = response.json();
+        //     setHistory(jsonData.history)
+        // }
+        const jsonData = response.json();
+        setHistory(jsonData.history)
     }, []);
     const historyList = [
         {
