@@ -312,110 +312,113 @@ async function getDirectoryNames(directoryPath, level) {
         throw error;
     }
 }
-// テスト用のエンドポイント
+
 app.get('/ilesson-test', async (req, res) => {
+    console.log("tlesson");
     // req.queryでクエリパラメータにlessonと単語番号が入っている
-    // 例: http://localhost:8080/ilesson-test?lesson=1&number=1
+    // 例: http://localhost:8080/lesson-test?lesson=1&number=1
     const lesson = req.query.lesson;
-    const number = req.query.number;
+    const number = parseInt(req.query.number);
+
+    const level = lessonToLevel[lesson][0];
+    const type = lessonToLevel[lesson][1];
+
     if (lesson === undefined || number === undefined) {
         res.status(400).send('Bad Request');
         return;
     }
-    // 問題のレベルを取得
-    console.log(lesson);
-    let level;
-    if (lesson === '1'){
-        level = 'B1' ;
-    }else if (lesson === '2'){
-        level = 'B2';
-    }else if (lesson === '3'){
-        level = 'daily';
-    }else if (lesson === '4'){
-        level = 'special';
-    }else{
-        level = 'error';
-    }
-    // console.log(level);
-    
 
-        // ディレクトリパスを指定してディレクトリ名を取得
-    const directoryPath = './new_data_set/data';
-    let words; //  画像が入っているディレクトリ名とパスが入っている.
+    let whereQeury = "WHERE level = ? AND type = ?";
+    if (lesson === "1") {
+        whereQeury = "WHERE ((level = ? AND type = ?) OR (level = ? AND type = ?))";
+    }
+
+    const execQuery = `
+        SELECT id, word_name, level, type, sentence, image_id
+        FROM (
+            SELECT id, word_name, level, type, sentence, image_id,
+                ROW_NUMBER() OVER(PARTITION BY word_name ORDER BY RAND()) as row_num
+            FROM lesson_data
+            ${whereQeury}
+        ) AS subquery
+        WHERE row_num = 1
+        ORDER BY word_name;
+    `;
+    let result;
     try {
-        words = await getDirectoryNames(directoryPath, level);
-        // console.log('ディレクトリ名:', words);
-    } catch (error) {
-        console.error('エラー:', error);
+        result = await pool.query(execQuery, lessonToLevel[lesson]);
+        console.log(result[0][number-1]['word_name']);
+    } catch (err) { 
+        console.error('データベース操作エラー:', err);
+        res.status(500).send('データベース操作エラー');
     }
-    // console.log(words);
 
-    var randoms;
-    /** 最小値と最大値 */
-    var min = 0, max = words.length;
-    try{
-        randoms = await generateUniqueRandoms(min, max, 4)
-    }catch(error) {
-        console.error('エラー:', error);
+    console.log(result);
+    console.log(result[0].length);
+    
+    const sentence = result[0][number-1]['sentence'];
+    const word = result[0][number-1]['word_name'];
+    const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+    let text_data;
+    try {
+        text_data = await fs.readFile(b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
     }
-    // console.log(answer,wrong1)
-    let selectWords = [words[randoms[0]],words[randoms[1]],words[randoms[2]],words[randoms[3]]];
-    console.log(selectWords);
-    var count = 0;
-    let item_list = [];
-    let ansWords
-    for (const q of words) {
-        try {
-            const answer = await pool.query(
-                'SELECT * FROM lesson_data WHERE word_name = ?',
-                [q.name]
-            );
-            const data = answer[0];
-            console.log(data);
     
-            const min = 0;
-            const max = data.length;
-    
-            const imageRandom = await generateUniqueRandoms(min, max, 1);
-            console.log(imageRandom);
-    
-            const targetData = data[imageRandom[0]];
-            console.log(targetData);
-    
-            const fileName = targetData.word_name + '/image' + targetData.image_id + '.text';
-            const filePath = path.join(q.path, fileName);
-            console.log(filePath);
-    
-            let image;
-            try {
-                image = await fs.readFile(filePath, 'utf-8');
-                // console.log(image);
-            } catch (error) {
-                console.error('エラー:', error);
-            }
+    let num = number;
+    if (number > 5) {
+        num = 0;
+    }
 
-            const image_data = "data:image/png;base64," + image;
-            console.log(image_data);
-            item_list.push(image_data);
+    const wrong1_word = result[0][number+2]['word_name'];
+    const wrong1_b64_data_path = path.join('./new_data_set/data/', result[0][number+2]['level'] + '_' + result[0][number+2]['type'], wrong1_word, 'image' + result[0][number+2]['image_id'] + '.text');
+    let wrong1_text_data;
+    try {
+        wrong1_text_data = await fs.readFile(wrong1_b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
     
-            if (count === 0) {
-                ansWords = targetData.sentence;
-            }
+    const wrong2_word = result[0][number+3]['word_name'];
+    const wrong2_b64_data_path = path.join('./new_data_set/data/', result[0][number+3]['level'] + '_' + result[0][number+3]['type'], wrong2_word, 'image' + result[0][number+3]['image_id'] + '.text');
+    let wrong2_text_data;
+    try {
+        wrong2_text_data = await fs.readFile(wrong2_b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
+    const wrong3_word = result[0][number+4]['word_name'];
+    const wrong3_b64_data_path = path.join('./new_data_set/data/', result[0][number+4]['level'] + '_' + result[0][number+4]['type'], wrong3_word, 'image' + result[0][number+4]['image_id'] + '.text');
+    let wrong3_text_data;
+    try {
+        wrong3_text_data = await fs.readFile(wrong3_b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
     
-            count = count + 1;
-        } catch (error) {
-            console.error('エラー:', error);
+    const item_list = shuffleArray(["0data:image/png;base64," + text_data, "1data:image/png;base64," + wrong1_text_data, "2data:image/png;base64," + wrong2_text_data, "3data:image/png;base64," + wrong3_text_data]);
+    let ans = 0;
+    for (let i = 0 ;i < 4;i++) {
+        if (item_list[i][0] == "0"){
+            ans = i;
         }
+        item_list[i] = item_list[i].slice(1);
     }
+    console.log(ans);
+    console.log(sentence);
+    console.log(item_list);
     res.header('Access-Control-Allow-Origin', '*');
     res.json({
-        "word":ansWords,
-        "ans":0,
-        "image": item_list,
+        "ans": ans,
+        "images":item_list,
+        "word": sentence,
+        "history": 0
     });
-
-
-
 
 });
 
