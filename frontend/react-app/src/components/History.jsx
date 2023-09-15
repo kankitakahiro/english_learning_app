@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 // import Modal from 'react-modal';
 // import { customStyles } from './Modal';
 import { REACT_APP_DEV_URL } from '..';
-
+import Header from './Header';
 import Accordion from 'react-bootstrap/Accordion';
 
 export default function History() {
@@ -87,7 +87,7 @@ export default function History() {
     );
     return (
         <>
-            <header></header>
+            <Header />
             <p>Your Hisorys</p>
             <ul>{lessons}</ul>
             {/* <Modal

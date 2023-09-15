@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useParams } from 'react-router-dom';
+import Header from './Header';
 
 
 /*
@@ -11,7 +12,7 @@ export default function Iresult() {
     const { score } = useParams();
     return (
         <>
-            <header></header>
+            <Header />
             <main>
                 <div className='ilesson-header'>
                     <h1>LESSON{id}</h1>

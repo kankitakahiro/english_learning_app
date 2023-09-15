@@ -6,6 +6,7 @@ import { auth } from './firebaseConfig';
 import Modal from 'react-modal';
 import { customStyles } from './Modal';
 import { REACT_APP_DEV_URL } from '..';
+import Header from './Header';
 
 export default function Sign() {
     const [email, setEmail] = useState('');
@@ -70,7 +71,8 @@ export default function Sign() {
     };
 
     return (
-        <><header></header>
+        <>
+            <Header />
             <main className='sign'>
                 <div>
                     <form onSubmit={handleSubmitSingIn} className='login-form'>
