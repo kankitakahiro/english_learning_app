@@ -49,7 +49,7 @@ export default function Home() {
                 <div className='footer-d'>
                     <div className='low-buttons'>
                         <Link to="/sign" className='btn-p'>Login</Link>
-                        <Link to="/history" className='btn-s'>History</Link>
+                        <Link to="/history" className='btn-s' disabled>History</Link>
                     </div>
                 </div>
             </main>
