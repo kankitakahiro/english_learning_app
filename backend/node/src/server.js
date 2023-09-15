@@ -60,6 +60,10 @@ const pool = mysql.createPool(mysql_conf);
 // reactのビルドファイルを読み込む
 app.use(express.static(path.join(__dirname, 'build')));
 
+/** min以上max以下の整数値の乱数を返す */
+function intRandom(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
 // jsonをパースする
 app.use(express.json());
 

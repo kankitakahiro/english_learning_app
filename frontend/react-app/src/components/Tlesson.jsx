@@ -11,6 +11,7 @@ export default function Tlesson() {
 
     const { id } = useParams();
     const [words, setWords] = useState([]);
+    const [history, setHistory] = useState([]);
     const [answer, setAnswer] = useState('');
     const [image, setImage] = useState('');
     const [number, setNumber] = useState(1);
@@ -24,18 +25,31 @@ export default function Tlesson() {
     // Called only at first
     // Get words and image from backend;
     useEffect(() => {
-        console.log("called");
         if (number === 11) {
-            navigate(`/lesson/${id}/result/${score}`);
+            const retrievedToken = sessionStorage.getItem("authToken");
+            fetch(`${REACT_APP_DEV_URL}/verifyToken`, {
+                // const response = await fetch('http://localhost:8080/verifyToken', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': retrievedToken
+                },
+                body: {
+                    id: id,
+                    history: history
+                },
+            });
+            navigate(`/tlesson/${id}/result/${score}`);
         } else {
-            fetch(`${REACT_APP_DEV_URL}/lesson-test?lesson=${id}&number=${number}`)
-                // fetch(`/lesson-test?lesson=${id}&number=${number}`)
+            fetch(`${REACT_APP_DEV_URL} / tlesson - test ? lesson = ${id} & number=${number}`)
+                // fetch(`/ lesson - test ? lesson = ${ id } & number=${ number }`)
                 .then(response => response.json())
                 .then(data => {
                     setAnswer(data.ans);
                     setWords(data.item_list);
                     setImage(data.image);
-                    navigate(`/tlesson/${id}/${number}`);
+                    setHistory(...history, data.history)
+                    navigate(`/ tlesson / ${id} / ${number}`);
                 });
         }
     }, [number]);
@@ -88,7 +102,6 @@ export default function Tlesson() {
                 isOpen={showCorrectModal}
                 contentLabel="correctModal"
                 style={customStyles}
-
             >
                 <div onClick={() => handleNext()} className='correctModal'>
                     <h2>Correct!</h2>
