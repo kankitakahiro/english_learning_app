@@ -68,21 +68,22 @@ app.use(express.json());
 
 // root
 app.get('/', (req, res) => {
+    console.log("動きました")
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // ログインのトークンを調べる
-// app.use( async (req, res, next) => {
-//     try {
-//         const idToken = req.headers.authorization;
-//         const decodedToken = await admin.auth().verifyIdToken(idToken);
-//         req.status = decodedToken.uid;
-//     } catch (error) {
-//         console.log(error);
-//         req.status = false;
-//     }
-//     next();
-// });
+app.use( async (req, res, next) => {
+    try {
+        const idToken = req.headers.authorization;
+        const decodedToken = await admin.auth().verifyIdToken(idToken);
+        req.status = decodedToken.uid;
+    } catch (error) {
+        console.log(error);
+        req.status = false;
+    }
+    next();
+});
 
 // ログイン認証
 // ユーザーの新規登録はfirebaseに直接アクセスして行う
@@ -269,94 +270,170 @@ app.post('/history', async (req, res) => {
 
 });
 
-// テスト用のエンドポイント
-app.get('/lesson-test', (req, res) => {
-    console.log("lesson-test");
+/** min以上max以下の整数値の乱数を返す */
+function intRandom(min, max){
+    return Math.floor( Math.random() * (max - min + 1)) + min;
+}
+// 重複しない乱数を生成する非同期関数
+async function generateUniqueRandoms(min, max, count) {
+    const randoms = [];
+    while (randoms.length < count) {
+        const random = await intRandom(min, max);
+        if (!randoms.includes(random)) {
+            randoms.push(random);
+        }
+    }
+    return randoms;
+}
+
+async function getDirectoryNames(directoryPath, level) {
+    try {
+        const files = await fs.readdir(directoryPath, {withFileTypes: true});
+        var words = [];
+        for (const file of files) {
+            if (file.isDirectory()) {
+                let reg = new RegExp(level);
+                // console.log(reg)
+                if (reg.test(file.name)){
+                    wordParh = path.join(file.path,file.name);
+                    const wordFiles = await fs.readdir(wordParh, {withFileTypes: true});
+                    for (const fileFile of wordFiles) {
+                        if (fileFile.isDirectory()) {
+                            words.push(fileFile);
+                        }
+                    }
+                }
+
+            }
+        }
+        return words;
+    } catch (error) {
+        console.error('ディレクトリの取得エラー:', error);
+        throw error;
+    }
+}
+
+app.get('/ilesson-test', async (req, res) => {
+    console.log("tlesson");
     // req.queryでクエリパラメータにlessonと単語番号が入っている
     // 例: http://localhost:8080/lesson-test?lesson=1&number=1
     const lesson = req.query.lesson;
-    const number = req.query.number;
+    const number = parseInt(req.query.number);
+
+    console.log(lesson);
+
+    const level = lessonToLevel[lesson][0];
+    const type = lessonToLevel[lesson][1];
+
     if (lesson === undefined || number === undefined) {
         res.status(400).send('Bad Request');
         return;
     }
-    fs.readdir('./b64_data', (err, files) => {
-        if (err) {
-            console.log(err);
-            res.status(500).send('Internal Server Error 1');
-            return;
+
+    let whereQeury = "WHERE level = ? AND type = ?";
+    if (lesson === "1") {
+        whereQeury = "WHERE ((level = ? AND type = ?) OR (level = ? AND type = ?))";
+    }
+
+    const execQuery = `
+        SELECT id, word_name, level, type, sentence, image_id
+        FROM (
+            SELECT id, word_name, level, type, sentence, image_id,
+                ROW_NUMBER() OVER(PARTITION BY word_name ORDER BY RAND()) as row_num
+            FROM lesson_data
+            ${whereQeury}
+        ) AS subquery
+        WHERE row_num = 1
+        ORDER BY word_name;
+    `;
+    let result;
+    try {
+        result = await pool.query(execQuery, lessonToLevel[lesson]);
+        console.log(result[0][number-1]['word_name']);
+    } catch (err) { 
+        console.error('データベース操作エラー:', err);
+        res.status(500).send('データベース操作エラー');
+    }
+
+    // console.log(result);
+    // console.log(result[0].length);
+    
+    const sentence = result[0][number-1]['sentence'];
+    const word = result[0][number-1]['word_name'];
+    const b64_data_path = path.join('./new_data_set/data/', result[0][number-1]['level'] + '_' + result[0][number-1]['type'], word, 'image' + result[0][number-1]['image_id'] + '.text');
+    let text_data;
+    try {
+        text_data = await fs.readFile(b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
+    
+    let num = number;
+    if (number > 5) {
+        num = 0;
+    }
+
+    const wrong1_word = result[0][number+2]['word_name'];
+    const wrong1_b64_data_path = path.join('./new_data_set/data/', result[0][number+2]['level'] + '_' + result[0][number+2]['type'], wrong1_word, 'image' + result[0][number+2]['image_id'] + '.text');
+    let wrong1_text_data;
+    try {
+        wrong1_text_data = await fs.readFile(wrong1_b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
+    
+    const wrong2_word = result[0][number+3]['word_name'];
+    const wrong2_b64_data_path = path.join('./new_data_set/data/', result[0][number+3]['level'] + '_' + result[0][number+3]['type'], wrong2_word, 'image' + result[0][number+3]['image_id'] + '.text');
+    let wrong2_text_data;
+    try {
+        wrong2_text_data = await fs.readFile(wrong2_b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
+    const wrong3_word = result[0][number+4]['word_name'];
+    const wrong3_b64_data_path = path.join('./new_data_set/data/', result[0][number+4]['level'] + '_' + result[0][number+4]['type'], wrong3_word, 'image' + result[0][number+4]['image_id'] + '.text');
+    let wrong3_text_data;
+    try {
+        wrong3_text_data = await fs.readFile(wrong3_b64_data_path, 'utf8');
+    } catch (err) {
+        console.error('ファイル読み込みエラー:', err);
+        res.status(500).send('ファイル読み込みエラー');
+    }
+    
+    const item_list = shuffleArray(["0data:image/png;base64," + text_data, "1data:image/png;base64," + wrong1_text_data, "2data:image/png;base64," + wrong2_text_data, "3data:image/png;base64," + wrong3_text_data]);
+    let ans = 0;
+    for (let i = 0 ;i < 4;i++) {
+        if (item_list[i][0] == "0"){
+            ans = i;
         }
-        let image_data;
-        // .txt ファイルだけをフィルタリング
-        // const textFiles = files.filter(file => path.extname(file) === '.text');
-
-        try {
-
-            // クエリを実行
-            pool.query("SELECT * FROM question where lesson = ?", [lesson], (err, results) => {
-                if (err) throw err;
-                // console.log(results);
-                // ランダムな .txt ファイルを選ぶ
-                /** 重複チェック用配列 */
-                var randoms = [];
-                /** 最小値と最大値 */
-                var min = 0, max = results.length;
-
-                /** 重複チェックしながら乱数作成 */
-                for (i = min; i <= 3; i++) {
-                    while (true) {
-                        var tmp = intRandom(min, max);
-                        if (!randoms.includes(tmp)) {
-                            randoms.push(tmp);
-                            break;
-                        }
-                    }
-                }
-                const answer = results[randoms[0]];
-                const wronge1 = results[randoms[1]];
-                const wronge2 = results[randoms[2]];
-                const wronge3 = results[randoms[3]];
-                console.log(answer);
-                console.log(wronge1);
-                console.log(wronge2);
-                console.log(wronge3);
-                // ファイルの内容を読み取る
-                fs.readFile(path.join('./b64_data', answer.image), 'utf8', (err, data) => {
-                    if (err) {
-                        res.status(500).send('Internal Server Error 2');
-                        return;
-                    }
-                    image_data = data;
-
-                    ans = answer.word;
-                    item_list = [answer.word, wronge1.word, wronge2.word, wronge3.word] // シャッフル
-
-                    // console.log(image_data);
-                    // base64形式で返す
-                    res.header('Access-Control-Allow-Origin', '*');
-                    res.json({
-                        "id": 1,
-                        "ans": ans,
-                        "item_list": item_list,
-                        "image": "data:image/png;base64," + image_data,
-                        "history": "1"
-                    });
-                });
-
-            });
-        } catch (err) {
-            console.error('データベース操作エラー:', err);
-            res.status(500).send('データベース操作エラー');
-        }
-
+        item_list[i] = item_list[i].slice(1);
+    }
+    // console.log(ans);
+    // console.log(sentence);
+    // console.log(item_list);
+    res.header('Access-Control-Allow-Origin', '*');
+    console.log("_______________");
+    // console.log(ansWords);
+    // console.log(item_list.length);
+    console.log(ans);
+    console.log("_______________");
+    // console.log(item_list[0]);
+    res.json({
+        "ans": ans,
+        "images":item_list,
+        "word": sentence,
+        "history": 0
     });
+
 });
 
-// id | word_name | level | type | sentence | image_id |
 // ルートハンドラーの定義
 app.get('/mysql',  async (req, res) => {
     try {
-        dotenv.config();
+        // dotenv.config();
             // 例: クエリの実行
         // const test_query = `
         //     SELECT id, word_name, level, type, sentence, image_id
@@ -378,6 +455,7 @@ app.get('/mysql',  async (req, res) => {
         const result = await pool.query(test_query);
         console.log(result);
         console.log("development");
+        res.send(rows); // クエリの結果をクライアントに返す例
     } catch (err) {
         console.error('データベース操作エラー:', err);
         res.status(500).send('データベース操作エラー');
