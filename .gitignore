@@ -2,10 +2,9 @@ node_modules
 
 .env
 
-db/
 
 hack-u-deploy-firebase-adminsdk-qndfy-c1d0da96c5.json
-
+config
 openai
 generate_image
 vision-398320-5a992653e5ca.json

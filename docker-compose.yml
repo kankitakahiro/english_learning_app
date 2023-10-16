@@ -6,9 +6,9 @@ services:
     command:
       ["/cloud_sql_proxy",
       "-instances=vision-398320:asia-northeast1:vision-db=tcp:0.0.0.0:3306",
-      "-credential_file=./config/vision-398320-5a992653e5ca.json"]
+      "-credential_file=./config/vision-398320-b3604b57f719.json"]
     volumes:
-      - ./config/vision-398320-5a992653e5ca.json:/config/vision-398320-5a992653e5ca.json
+      - ./backend/db/config/vision-398320-b3604b57f719.json:/config/vision-398320-b3604b57f719.json
     ports:
       - "3306:3306"
   node:
