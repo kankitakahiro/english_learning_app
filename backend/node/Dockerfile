@@ -9,7 +9,7 @@ COPY package*.json ./
 RUN apt-get update && apt-get install -y vim
 RUN npm install
 
-# ENV NODE_ENV=production
+ENV NODE_ENV=production
 
 COPY . .
 
