@@ -583,7 +583,7 @@ app.get('/mysql',  async (req, res) => {
  * table user_lesson　-> ユーザーの学習データ
  * _____________________________________
  * id | word_name | user_id | image_id |
- * _____________________________________
+ * ____________________________________
  * word_name : 単語の名前
  * user_id : ユーザーのID(firebaseのUID)
  * image_id : 単語の番号(image1 〜 max(image4))
